@@ -1,37 +1,101 @@
-<script type="module">
-  // Firebase App (config)
-  const firebaseConfig = {
-    apiKey: "AIzaSyCgTUoaHiiwtrs9FnVoiAi5-3qmMWuih80",
-    authDomain: "gpu-coban.firebaseapp.com",
-    projectId: "gpu-coban",
-    storageBucket: "gpu-coban.firebasestorage.app",
-    messagingSenderId: "231403963193",
-    appId: "1:231403963193:web:616908deb40cfe29c09ee8"
-  };
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPU Çoban Paneli</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #111; color: #eee; }
+    h2 { color: #00c8ff; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td {
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: left;
+    }
+    th { background: #222; color: #00c8ff; }
+    tr:nth-child(even) { background: #1b1b1b; }
+    tr:nth-child(odd) { background: #151515; }
+  </style>
+</head>
+<body>
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+  <h2>GPU Çoban – Rig Durumları</h2>
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
+  <table>
+    <thead>
+      <tr>
+        <th>Rig ID</th>
+        <th>Ad</th>
+        <th>Durum</th>
+        <th>GPU Sayısı</th>
+        <th>Toplam Hash</th>
+      </tr>
+    </thead>
+    <tbody id="rigs-table-body"></tbody>
+  </table>
 
-  const tbody = document.getElementById("rigs-table-body");
+  <!-- FIREBASE OKUMA SCRIPTİ -->
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgTUoaHiiwtrs9FnVoiAi5-3qmMWuih80",
+      authDomain: "gpu-coban.firebaseapp.com",
+      projectId: "gpu-coban",
+      storageBucket: "gpu-coban.firebasestorage.app",
+      messagingSenderId: "231403963193",
+      appId: "1:231403963193:web:616908deb40cfe29c09ee8"
+    };
 
-  // Firestore'dan rigs koleksiyonunu canlı dinle
-  onSnapshot(collection(db, "rigs"), (rigSnap) => {
-    tbody.innerHTML = "";
-    rigSnap.forEach(rigDoc => {
-      const rig = { id: rigDoc.id, ...rigDoc.data() };
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${rig.id}</td>
-        <td>${rig.name || "-"}</td>
-        <td>${rig.status || "-"}</td>
-        <td data-gpu-count>-</td>
-        <td data-total-hash>-</td>
-      `;
-      tbody.appendChild(tr);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const tbody = document.getElementById("rigs-table-body");
+    const gpuUnsubMap = new Map();
+
+    // RIG’LERİ CANLI DİNLE
+    onSnapshot(collection(db, "rigs"), (rigSnap) => {
+      tbody.innerHTML = "";
+
+      rigSnap.forEach((rigDoc) => {
+        const rig = { id: rigDoc.id, ...rigDoc.data() };
+
+        // tabloda satır oluştur
+        const tr = document.createElement("tr");
+        tr.id = `row-${rig.id}`;
+        tr.innerHTML = `
+          <td>${rig.id}</td>
+          <td>${rig.name || "-"}</td>
+          <td>${rig.status || "-"}</td>
+          <td data-gpu-count>-</td>
+          <td data-total-hash>-</td>
+        `;
+        tbody.appendChild(tr);
+
+        // GPU alt koleksiyonunu da canlı dinle
+        if (gpuUnsubMap.has(rig.id)) gpuUnsubMap.get(rig.id)();
+
+        import("https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js").then(({ collection, onSnapshot }) => {
+          const unsub = onSnapshot(collection(db, `rigs/${rig.id}/gpus`), (gpuSnap) => {
+            let gpus = [];
+            gpuSnap.forEach(g => gpus.push({ id: g.id, ...g.data() }));
+            const count = gpus.length;
+            const total = gpus.reduce((s, g) => s + (Number(g.hash) || 0), 0);
+
+            const row = document.getElementById(`row-${rig.id}`);
+            if (row) {
+              row.querySelector('[data-gpu-count]').textContent = String(count);
+              row.querySelector('[data-total-hash]').textContent = `${total.toFixed(2)} MH/s`;
+            }
+          });
+
+          gpuUnsubMap.set(rig.id, unsub);
+        });
+      });
     });
-  });
-</script>
+  </script>
+
+</body>
+</html>
