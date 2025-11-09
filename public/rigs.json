@@ -4,9 +4,7 @@
       "id": "rig-1",
       "name": "Rig 1",
       "status": "online",
-      "gpus": [
-        { "id": "GPU0", "model": "RTX 3070", "temp": 54, "fan": 60, "hash": 43.2, "power": 125 }
-      ]
+      "gpus": [{"id":"GPU0","model":"NVIDIA GeForce GTX 1060 6GB","temp":29,"fan":38,"power":8.42,"hash":0}]
     }
   ]
 }
