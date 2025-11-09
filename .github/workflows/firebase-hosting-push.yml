@@ -1,26 +1,33 @@
-# .github/workflows/firebase-hosting-main.yml
-name: Deploy to Live Firebase Hosting
+name: Deploy to Firebase Hosting on push
 
 on:
-  # Dağıtımı tetikleyecek olay: main dalına her push yapıldığında
   push:
-    branches:
-      - main 
+    branches: [ "main" ]
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      # Eğer kodunuz build gerektirmiyorsa (Sadece HTML/CSS/JS ise)
-      # Alttaki build adımını SİLEBİLİRSİNİZ.
-      - name: Build Code (Derleme adımı)
-        run: npm ci && npm run build
 
-      - name: Deploy to Firebase Live Channel
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # Statik site ise build yok; build adımı gerekmiyorsa kaldırdık.
+      # Eğer ileride npm build kullanırsak buraya ekleriz.
+
+      - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOU_COBAN }}' # Secret Key adı
-          projectId: gou-coban # Proje ID'niz
-          channelId: live # Canlı kanala dağıtım yap
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GPU_COBAN }}
+          channelId: live
+          projectId: gpu-coban
