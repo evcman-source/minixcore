@@ -1,1 +1,10 @@
-
+{
+  "name": "gpu-coban-functions",
+  "private": true,
+  "engines": { "node": "20" },
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^5.0.0",
+    "cors": "^2.8.5"
+  }
+}
