@@ -21,13 +21,11 @@ jobs:
         with:
           node-version: 20
 
-      # Statik site ise build yok; build adımı gerekmiyorsa kaldırdık.
-      # Eğer ileride npm build kullanırsak buraya ekleriz.
-
-      - name: Deploy to Firebase Hosting
+      # (A) Doğrudan action-hosting-deploy kullanımı — CANLI deploy
+      - name: Deploy to Firebase Hosting (live)
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GPU_COBAN }}
-          channelId: live
-          projectId: gpu-coban
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MINIXCORE }}
+          projectId: gpu-coban          # <-- senin gerçek Firebase proje ID’n
+          channelId: live               # preview yerine canlıyı zorla
