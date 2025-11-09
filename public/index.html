@@ -1,38 +1,37 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<title>GPU Çoban Paneli Denemesi v2</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-    body { font-family: Arial, sans-serif; background:#111; color:#eee; margin:0; padding:20px; }
-    h1 { text-align:center; color:#00ff9d; }
-    .rig-box { background:#1a1a1a; padding:15px; border-radius:10px; margin-bottom:15px; }
-    .rig-title { font-size:20px; color:#00d1ff; }
-    table { width:100%; border-collapse:collapse; margin-top:10px; }
-    td, th { border:1px solid #333; padding:8px; text-align:center; }
-    th { background:#222; }
-</style>
-</head>
-<body>
+<script type="module">
+  // Firebase App (config)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgTUoaHiiwtrs9FnVoiAi5-3qmMWuih80",
+    authDomain: "gpu-coban.firebaseapp.com",
+    projectId: "gpu-coban",
+    storageBucket: "gpu-coban.firebasestorage.app",
+    messagingSenderId: "231403963193",
+    appId: "1:231403963193:web:616908deb40cfe29c09ee8"
+  };
 
-<h1>GPU Çoban Kontrol Paneli</h1>
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
-<div id="rigs">
-    <div class="rig-box">
-        <div class="rig-title">Rig-1</div>
-        <table>
-            <tr><th>GPU</th><th>Hash</th><th>Temp</th><th>Fan</th><th>Durum</th></tr>
-            <tr><td>GPU0</td><td>---</td><td>---</td><td>---</td><td>Bekleniyor</td></tr>
-        </table>
-    </div>
-</div>
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
 
-<p style="text-align:center;margin-top:50px;color:#777;">
-Panel aktif. Rigerler veri göndermeye başladığında otomatik olarak görünecek.
-</p>
+  const tbody = document.getElementById("rigs-table-body");
 
-</body>
-</html>TRIGGER Paz 09.11.2025 14:26:04,34
-TRIGGER Paz 09.11.2025 14:33:31,59
-TRIGGER Paz 09.11.2025 14:34:22,99
+  // Firestore'dan rigs koleksiyonunu canlı dinle
+  onSnapshot(collection(db, "rigs"), (rigSnap) => {
+    tbody.innerHTML = "";
+    rigSnap.forEach(rigDoc => {
+      const rig = { id: rigDoc.id, ...rigDoc.data() };
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${rig.id}</td>
+        <td>${rig.name || "-"}</td>
+        <td>${rig.status || "-"}</td>
+        <td data-gpu-count>-</td>
+        <td data-total-hash>-</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+</script>
