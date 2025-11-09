@@ -1,0 +1,12 @@
+{
+  "rigs": [
+    {
+      "id": "rig-1",
+      "name": "Rig 1",
+      "status": "online",
+      "gpus": [
+        { "id": "GPU0", "model": "RTX 3070", "temp": 54, "fan": 60, "hash": 43.2, "power": 125 }
+      ]
+    }
+  ]
+}
