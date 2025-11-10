@@ -1,288 +1,109 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GPU Çoban – Panel</title>
-  <style>
-    :root{
-      /* HiveOS-like palette */
-      --bg:#131722; --panel:#171b26; --muted:#a8b3c2; --text:#e8eef6; --brand:#f26b1d;
-      --ok:#2ecc71; --warn:#f1c40f; --err:#e74c3c; --iso:#7f8c8d; --line:#232a36;
-      --badge:#1a2030; --blue:#5aa6ff;
-    }
-    html,body{height:100%;}
-    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
-    .container{max-width:1200px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-    .title{font-weight:800;letter-spacing:.3px}
-    .title span{color:var(--brand)}
-    .sub{color:var(--muted);font-size:12px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.24)}
-    .pad{padding:16px 18px}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GPU Çoban – Panel</title>
+<style>
+:root{
+/* HiveOS-like palette */
+--bg:#131722; --panel:#171b26; --muted:#a8b3c2; --text:#e8eef6; --brand:#f26b1d;
+--ok:#2ecc71; --warn:#f1c40f; --err:#e74c3c; --iso:#7f8c8d; --line:#232a36;
+--badge:#1a2030; --blue:#5aa6ff;
+}
+html,body{height:100%;}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.title{font-weight:800;letter-spacing:.3px}
+.title span{color:var(--brand)}
+.sub{color:var(--muted);font-size:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.24)}
+.pad{padding:16px 18px}
 
-    table{width:100%;border-collapse:separate;border-spacing:0;}
-    thead th{color:#ffc9a8;background:linear-gradient(180deg, #1b2230 0%, #171b26 100%);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px}
-    tbody td{padding:12px 14px;border-bottom:1px solid var(--line)}
-    tbody tr:hover{background:#101522}
 
-    .badges{display:flex;gap:6px;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--badge);font-size:12px}
-    .b-ok{background:rgba(46,204,113,.12);color:#baf3cf;border-color:rgba(46,204,113,.24)}
-    .b-warn{background:rgba(241,196,15,.12);color:#ffe9a3;border-color:rgba(241,196,15,.28)}
-    .b-err{background:rgba(231,76,60,.12);color:#ffc1b8;border-color:rgba(231,76,60,.28)}
-    .b-iso{background:rgba(127,140,141,.18);color:#e6eef8;border-color:rgba(127,140,141,.28)}
-    .b-off{background:rgba(60,72,88,.26);color:#cdd6e3;border-color:rgba(60,72,88,.44)}
+table{width:100%;border-collapse:separate;border-spacing:0;}
+thead th{color:#ffc9a8;background:linear-gradient(180deg, #1b2230 0%, #171b26 100%);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--line)}
+tbody tr:hover{background:#101522}
 
-    .row{display:flex;gap:16px;flex-wrap:wrap}
-    .col{flex:1 1 320px}
 
-    .toolbar{display:flex;align-items:center;gap:8px}
-    .ghost{background:transparent;border:1px dashed var(--line);color:var(--muted);padding:10px 12px;border-radius:10px}
-    .ghost[disabled]{opacity:.7;cursor:not-allowed}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--badge);font-size:12px}
+.b-ok{background:rgba(46,204,113,.12);color:#baf3cf;border-color:rgba(46,204,113,.24)}
+.b-warn{background:rgba(241,196,15,.12);color:#ffe9a3;border-color:rgba(241,196,15,.28)}
+.b-err{background:rgba(231,76,60,.12);color:#ffc1b8;border-color:rgba(231,76,60,.28)}
+.b-iso{background:rgba(127,140,141,.18);color:#e6eef8;border-color:rgba(127,140,141,.28)}
+.b-off{background:rgba(60,72,88,.26);color:#cdd6e3;border-color:rgba(60,72,88,.44)}
 
-    .muted{color:var(--muted)}
-    .kv{display:grid;grid-template-columns:160px 1fr;gap:8px;font-size:13px}
-    .kv div{padding:6px 0;border-bottom:1px dashed var(--line)}
 
-    .link{color:var(--blue);text-decoration:none}
-    .link:hover{text-decoration:underline}
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.col{flex:1 1 320px}
 
-    .footer{margin-top:16px;color:var(--muted);font-size:12px}
-    .pill{padding:2px 8px;border:1px solid var(--line);border-radius:999px;color:#ffc9a8}
 
-    @media (max-width:680px){
-      .kv{grid-template-columns:1fr}
-      thead{display:none}
-      tbody td{display:block;padding:10px 12px}
-      tbody tr{display:block;border:1px solid var(--line);border-radius:12px;margin:10px 0}
-    }
-  </style>
+.toolbar{display:flex;align-items:center;gap:8px}
+.ghost{background:transparent;border:1px dashed var(--line);color:var(--muted);padding:10px 12px;border-radius:10px}
+.ghost[disabled]{opacity:.7;cursor:not-allowed}
+
+
+.muted{color:var(--muted)}
+.kv{display:grid;grid-template-columns:160px 1fr;gap:8px;font-size:13px}
+.kv div{padding:6px 0;border-bottom:1px dashed var(--line)}
+
+
+.link{color:var(--blue);text-decoration:none}
+.link:hover{text-decoration:underline}
+
+
+.footer{margin-top:16px;color:var(--muted);font-size:12px}
+.pill{padding:2px 8px;border:1px solid var(--line);border-radius:999px;color:#ffc9a8}
+
+
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);cursor:pointer}
+.chip.active{outline:2px solid var(--brand)}
+
+
+.totals{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:160px}
+.kpi .v{font-weight:700}
+
+
+/* Modal */
+.modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.45);backdrop-filter:blur(2px);padding:40px 12px;z-index:30}
+.modal.open{display:flex}
+.sheet{width:min(980px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.4)}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);border-top-left-radius:16px;border-top-right-radius:16px}
+.sheet-close{border:1px solid var(--line);background:#1a2030;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer}
+
+
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,#1a2030 25%,#20283a 37%,#1a2030 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite;height:18px;border-radius:8px}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+
+.notice{font-size:13px;color:#ffc9a8}
+
+
+@media (max-width:680px){
+.kv{grid-template-columns:1fr}
+thead{display:none}
+tbody td{display:block;padding:10px 12px}
+tbody tr{display:block;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>
-        <div class="title">GPU Çoban <span>– Panel</span></div>
-        <div class="sub">Miner bağımsız telemetri → <code>rigs.json</code> → Panel</div>
-      </div>
-      <div class="badges">
-        <a class="badge" href="#" id="refreshBtn">⟳ Yenile</a>
-        <a class="badge" href="./rigs.json" target="_blank">JSON’u Gör</a>
-      </div>
-    </header>
-
-    <div id="view" class="card pad"></div>
-
-    <div class="footer">
-      Proje: <a class="link" href="https://github.com/evcman-source/minixcore" target="_blank">evcman-source/minixcore</a> · Hosting: Firebase · Veri dosyası: <code>public/rigs.json</code>
-    </div>
-  </div>
-
-  <script>
-    // ---- Basit Router (#/ , #/rig/<id>)
-    window.addEventListener('hashchange', router);
-    document.getElementById('refreshBtn').addEventListener('click', e => { e.preventDefault(); loadAndRender(); });
-
-    let RIGS = [];
-    const AUTO_REFRESH_MS = 10000; // 10 sn
-    let timer = null;
-
-    async function fetchJSON(url){
-      const res = await fetch(url + (url.includes('?')?'&':'?') + 'ts=' + Date.now()); // cache bust
-      if(!res.ok) throw new Error('JSON yüklenemedi');
-      return await res.json();
-    }
-
-    function normalizeData(data){
-      // rigs.json { rigs: [...] } veya doğrudan dizi olabilir
-      let rigs = Array.isArray(data) ? data : (data && Array.isArray(data.rigs) ? data.rigs : []);
-      // Alan adları farklı formatlarda gelebilir; GPU listesi yoksa 0 yap
-      return rigs.map(r => ({
-        rig_id: r.rig_id || r.id || r.name || 'rig',
-        name: r.name || r.rig_name || r.rig_id || '',
-        last_seen: r.last_seen || r.timestamp || null,
-        miner: r.miner || null,
-        hashrate: r.hashrate || null,
-        shares: r.shares || null,
-        warnings: r.warnings || [],
-        gpus: r.gpus || r.gpu || [],
-        status: r.status || r.state || null
-      }));
-    }
-
-    function nowSec(){ return Math.floor(Date.now()/1000); }
-    function parseISOSec(ts){ if(!ts) return null; const t = Date.parse(ts); return isNaN(t)? null : Math.floor(t/1000); }
-
-    function deriveRigMetrics(r){
-      // total hash
-      let totalMHs = 0;
-      if (r.hashrate && typeof r.hashrate.total_mhs === 'number') totalMHs = r.hashrate.total_mhs;
-      else if (r.gpus && r.gpus.length){
-        for(const g of r.gpus){ if(typeof g.hash_mhs === 'number') totalMHs += g.hash_mhs; }
-      }
-      // total power
-      let totalW = 0;
-      if (r.gpus){ for(const g of r.gpus){ if(typeof g.power_w === 'number') totalW += g.power_w; } }
-      const eff = (totalMHs>0 && totalW>0) ? (totalMHs/totalW) : null;
-      // online/offline
-      const seen = parseISOSec(r.last_seen);
-      const delta = seen? (nowSec()-seen) : null;
-      let derivedStatus = 'online';
-      if (delta==null) derivedStatus = r.status || 'online';
-      else if (delta > 600) derivedStatus = 'offline';
-      else if (delta > 180) derivedStatus = 'stale';
-      // throttle sinyali (GPU sıcak/util)
-      if (derivedStatus==='online' && r.gpus && r.gpus.some(g => (g.temp_c>=75) || (typeof g.util_pct==='number' && g.util_pct<70))) {
-        derivedStatus = 'throttle';
-      }
-      return { totalMHs, totalW, eff, delta, status: r.status || derivedStatus };
-    }
-
-    function fmtMH(x){ return (typeof x==='number') ? x.toFixed(2) + ' MH/s' : '—'; }
-    function fmtW(x){ return (typeof x==='number') ? Math.round(x) + ' W' : '—'; }
-    function fmtEff(x){ return (typeof x==='number') ? x.toFixed(3) + ' MH/W' : '—'; }
-    function fmtTimeAgo(delta){
-      if(delta==null) return '—';
-      if(delta<60) return delta + ' sn önce';
-      const m = Math.floor(delta/60); if(m<60) return m + ' dk önce';
-      const h = Math.floor(m/60); return h + ' sa önce';
-    }
-
-    function badge(status){
-      const s=(status||'online').toLowerCase();
-      const cls = s==='online'?'b-ok':(s==='throttle'?'b-warn':(s==='isolated'?'b-iso':(s==='stale'?'b-warn':'b-off')));
-      const label = s==='online'?'online':(s==='throttle'?'throttle':(s==='isolated'?'isolated':(s==='stale'?'stale':'offline')));
-      return '<span class="badge '+cls+'">● '+label+'</span>';
-    }
-
-    function renderList(rigs){
-      const rows = rigs.map(r => {
-        const m = deriveRigMetrics(r);
-        const gpuCount = Array.isArray(r.gpus) ? r.gpus.length : (r.gpu_count||0);
-        return '<tr>' +
-          '<td><a class="link" href="#/rig/'+encodeURIComponent(r.rig_id)+'">'+r.rig_id+'</a></td>' +
-          '<td>'+(r.name || '—')+'</td>' +
-          '<td>'+badge(m.status)+'</td>' +
-          '<td>'+gpuCount+'</td>' +
-          '<td>'+fmtMH(m.totalMHs)+'</td>' +
-          '<td>'+fmtW(m.totalW)+'</td>' +
-          '<td>'+fmtEff(m.eff)+'</td>' +
-          '<td class="muted">'+fmtTimeAgo(m.delta)+'</td>' +
-          '<td><a class="pill" href="#/rig/'+encodeURIComponent(r.rig_id)+'">Detay</a></td>' +
-        '</tr>';
-      }).join('');
-
-      return '' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">' +
-          '<div class="badges"><span class="badge">Rig Sayısı: '+rigs.length+'</span></div>' +
-          '<div class="toolbar"><button class="ghost" id="hardRefresh">JSON Yeniden Yükle</button></div>' +
-        '</div>' +
-        '<div class="card" style="overflow:auto">' +
-          '<table>' +
-            '<thead><tr>' +
-              '<th>Rig ID</th>' +
-              '<th>Ad</th>' +
-              '<th>Durum</th>' +
-              '<th>GPU</th>' +
-              '<th>Toplam Hash</th>' +
-              '<th>Toplam Güç</th>' +
-              '<th>Verimlilik</th>' +
-              '<th>Son Güncelleme</th>' +
-              '<th></th>' +
-            '</tr></thead>' +
-            '<tbody>'+(rows || '<tr><td colspan="9" class="muted">Kayıt yok.</td></tr>')+'</tbody>' +
-          '</table>' +
-        '</div>';
-    }
-
-    function renderDetail(r){
-      const m = deriveRigMetrics(r);
-      const miner = r.miner || {};
-      const gpus = r.gpus || [];
-      const gpuRows = gpus.map(function(g,idx){
-        const st = (g.status||'ok').toLowerCase();
-        const cls = st==='ok'?'b-ok':(st==='throttle'?'b-warn':(st==='isolated'?'b-iso':(st==='error'?'b-err':'b-off')));
-        return '<tr>' +
-          '<td>'+( (g.id!=null)? g.id : idx )+'</td>' +
-          '<td>'+(g.model || '—')+'</td>' +
-          '<td>'+((g.temp_c!=null? g.temp_c+'°C':'—'))+'</td>' +
-          '<td>'+((g.fan_percent!=null? g.fan_percent+'%':'—'))+'</td>' +
-          '<td>'+fmtW(g.power_w)+'</td>' +
-          '<td>'+((g.util_pct!=null? g.util_pct+'%':'—'))+'</td>' +
-          '<td>'+((typeof g.hash_mhs==='number'? g.hash_mhs.toFixed(2)+' MH/s':'—'))+'</td>' +
-          '<td>'+((g.power_limit_w!=null? g.power_limit_w+' W':'—'))+'</td>' +
-          '<td><span class="badge '+cls+'">'+st+'</span></td>' +
-          '<td class="muted">—</td>' +
-        '</tr>';
-      }).join('');
-
-      return '' +
-        '<div class="row" style="margin-bottom:12px">' +
-          '<div class="col card pad">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
-              '<div>' +
-                '<div style="font-size:18px;font-weight:700">'+r.rig_id+' <span class="muted">'+(r.name?('· '+r.name):'')+'</span></div>' +
-                '<div class="badges" style="margin-top:6px">'+badge(m.status)+' '+(miner.name?('<span class="badge">'+miner.name+(miner.version?(' v'+miner.version):'')+'</span>'):'')+' '+(miner.coin?('<span class="badge">coin: '+miner.coin+'</span>'):'')+'</div>' +
-              '</div>' +
-              '<div class="toolbar">' +
-                '<button class="ghost" disabled title="SSH yokken pasif">İzole Et</button>' +
-                '<button class="ghost" disabled title="SSH yokken pasif">OC Reset</button>' +
-                '<button class="ghost" disabled title="SSH yokken pasif">Miner Restart</button>' +
-                '<a class="pill" href="#">← Liste</a>' +
-              '</div>' +
-            '</div>' +
-            '<div class="kv">' +
-              '<div class="muted">Toplam Hash</div><div>'+fmtMH(m.totalMHs)+'</div>' +
-              '<div class="muted">Toplam Güç</div><div>'+fmtW(m.totalW)+'</div>' +
-              '<div class="muted">Verimlilik</div><div>'+fmtEff(m.eff)+'</div>' +
-              '<div class="muted">Son Güncelleme</div><div>'+fmtTimeAgo(m.delta)+'</div>' +
-            '</div>' +
-          '</div>' +
-          '<div class="col card pad">' +
-            '<div style="font-weight:700;margin-bottom:8px">Uyarılar</div>' +
-            '<div class="muted">'+(((r.warnings && r.warnings.length)? r.warnings.map(function(x){return '• '+x;}).join('<br>') : '—'))+'</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="card" style="overflow:auto">' +
-          '<table>' +
-            '<thead><tr>' +
-              '<th>#</th><th>Model</th><th>Temp</th><th>Fan</th><th>Power</th><th>Util</th><th>Hash</th><th>PL</th><th>Durum</th><th>İşlem</th>' +
-            '</tr></thead>' +
-            '<tbody>'+(gpuRows || '<tr><td colspan="10" class="muted">GPU verisi yok.</td></tr>')+'</tbody>' +
-          '</table>' +
-        '</div>';
-    }
-
-    function byId(id){ return RIGS.find(function(x){ return String(x.rig_id) === String(id); }); }
-
-    function router(){
-      const hash = location.hash.replace(/^#!/,'#');
-      const view = document.getElementById('view');
-      const m = hash.match(/^#\/rig\/(.+)$/);
-      if(m){
-        const rig = byId(decodeURIComponent(m[1]));
-        view.innerHTML = rig ? renderDetail(rig) : '<div class="muted">Rig bulunamadı.</div>';
-      } else {
-        view.innerHTML = renderList(RIGS);
-        const hard = document.getElementById('hardRefresh');
-        if(hard){ hard.addEventListener('click', async function(){ await loadAndRender(true); }); }
-      }
-    }
-
-    async function loadAndRender(force){
-      try{
-        const data = await fetchJSON('rigs.json' + (force? ('?cache=' + Math.random()) : ''));
-        RIGS = normalizeData(data);
-        router();
-        if(timer) clearTimeout(timer);
-        timer = setTimeout(function(){ loadAndRender(false); }, AUTO_REFRESH_MS);
-      }catch(err){
-        document.getElementById('view').innerHTML = '<div class="muted">Veri yüklenemedi: '+err.message+'</div>';
-      }
-    }
-
-    loadAndRender(false);
-  </script>
-</body>
+<div class="container">
+<header>
+<div>
+<div class="title">GPU Çoban <span>– Panel</span></div>
+<div class="sub">Miner bağımsız telemetri → <code>rigs.json</code> → Panel</div>
+</div>
+<div class="badges">
+<span class="badge" id="pulse">⟳ Son çekim: –</span>
+<a class="badge" href="#" id="refreshBtn">Yenile</a>
+<a class="badge" href="./rigs.json" target="_blank">JSON’u Gör</a>
+</div>
+</header>
 </html>
