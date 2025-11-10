@@ -38,9 +38,8 @@
       text-align: left;
       font-weight: 600;
     }
-    tr:hover {
-      background: #2d3647;
-    }
+    tr:hover { background: #2d3647; }
+
     .chip {
       display: inline-block;
       padding: 6px 12px;
@@ -50,16 +49,33 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .chip:hover {
-      background: #4b5563;
+    .chip:hover { background: #4b5563; }
+
+    #kpi { margin-bottom: 20px; }
+    #kpi .chip { margin-right: 6px; margin-bottom: 8px; }
+
+    /* Snackbar */
+    #snack {
+      visibility: hidden;
+      min-width: 220px;
+      background: #10b981;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 12px;
+      position: fixed;
+      z-index: 9999;
+      left: 50%;
+      bottom: 40px;
+      transform: translateX(-50%);
+      font-size: 15px;
     }
-    #kpi {
-      margin-bottom: 20px;
+    #snack.show {
+      visibility: visible;
+      animation: fadein 0.4s, fadeout 0.4s 2.2s;
     }
-    #kpi .chip {
-      margin-right: 6px;
-      margin-bottom: 8px;
-    }
+    @keyframes fadein { from{bottom:20px;opacity:0;} to{bottom:40px;opacity:1;} }
+    @keyframes fadeout { from{bottom:40px;opacity:1;} to{bottom:20px;opacity:0;} }
 
     /* MODAL */
     #rigModal {
@@ -86,31 +102,23 @@
       justify-content: space-between;
       margin-bottom: 12px;
     }
-    .close-btn {
-      background: #b91c1c;
-      color: #fff;
-    }
-    .gpu-table th {
-      background: #283046;
-    }
-    .sheet-row {
-      margin: 6px 0;
-    }
+    .close-btn { background: #b91c1c; }
+    .gpu-table th { background: #283046; }
+    .sheet-row { margin: 6px 0; }
     .sheet-sep {
       height: 1px;
       background: #283046;
       margin: 16px 0;
     }
   </style>
-
 </head>
+
 <body>
 
 <div class="container">
-
   <h1>GPU Çoban – Canlı Panel</h1>
 
-  <!-- KPI alanı (Toplam Hash, Güç, Rig sayısı) -->
+  <!-- KPI alanı -->
   <div id="kpi"></div>
 
   <!-- Ana tablo -->
@@ -127,7 +135,6 @@
     </thead>
     <tbody id="rigRows"></tbody>
   </table>
-
 </div>
 
 <!-- DETAY MODAL -->
@@ -137,8 +144,9 @@
   </div>
 </div>
 
-<!-- Panel Script -->
-<script type="module" src="./panel.js?v=RTDB1"></script>
+<!-- Snackbar -->
+<div id="snack"></div>
 
+<script type="module" src="./panel.js?v=CMD1"></script>
 </body>
 </html>
