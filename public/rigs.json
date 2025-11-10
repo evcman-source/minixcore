@@ -1,58 +1,43 @@
-{
-  "rigs": [
-    {
-      "rig_id": "rig-1",
-      "name": "Ev - Test PC",
-      "last_seen": "2025-11-10T08:30:00Z",
-      "miner": { "name": "gminer", "version": "3.45", "coin": "RVN" },
-      "gpus": [
-        {
-          "id": 0,
-          "model": "RTX 3060 12GB",
-          "temp_c": 58,
-          "fan_percent": 55,
-          "power_w": 118,
-          "util_pct": 97,
-          "hash_mhs": 24.70,
-          "power_limit_w": 140,
-          "status": "ok"
-        }
-      ],
-      "warnings": []
+[
+  {
+    "rig_id": "RIG-001",
+    "name": "Evcman-01 (3070)",
+    "status": "online",
+    "miner": {
+      "name": "gminer",
+      "version": "2.70",
+      "coin": "ETH"
     },
-    {
-      "rig_id": "rig-2",
-      "name": "Garaj Rig",
-      "last_seen": "2025-11-10T08:28:00Z",
-      "miner": { "name": "lolMiner", "version": "1.87", "coin": "ETC" },
-      "gpus": [
-        {
-          "id": 0,
-          "model": "RX 580 8GB",
-          "temp_c": 76,
-          "fan_percent": 80,
-          "power_w": 125,
-          "util_pct": 68,
-          "hash_mhs": 30.20,
-          "power_limit_w": 140,
-          "status": "throttle"
-        },
-        {
-          "id": 1,
-          "model": "RX 580 8GB",
-          "temp_c": 60,
-          "fan_percent": 45,
-          "power_w": 112,
-          "util_pct": 95,
-          "hash_mhs": 31.10,
-          "power_limit_w": 140,
-          "status": "ok"
-        }
-      ],
-      "warnings": [
-        "GPU0 sıcaklık yüksek – throttle",
-        "GPU0 hash düşüşü %12"
-      ]
-    }
-  ]
-}
+    "gpus": [
+      { "id": 0, "model": "RTX 3070", "hash_mhs": 61.2, "temp_c": 52, "fan_percent": 75, "power_w": 120, "status": "ok" },
+      { "id": 1, "model": "RTX 3070", "hash_mhs": 61.5, "temp_c": 55, "fan_percent": 78, "power_w": 122, "status": "ok" }
+    ],
+    "last_seen": "2025-11-10T14:50:00Z"
+  },
+  {
+    "rig_id": "RIG-002",
+    "name": "Test-Rig (Offline)",
+    "status": "offline",
+    "miner": {
+      "name": "lolminer",
+      "coin": "ETC"
+    },
+    "gpus": [
+      { "id": 0, "model": "RTX 3060", "hash_mhs": 0, "temp_c": 0, "fan_percent": 0, "power_w": 0, "status": "offline" }
+    ],
+    "last_seen": "2025-11-09T12:00:00Z"
+  },
+  {
+    "rig_id": "RIG-003",
+    "name": "Sorunlu-Rig",
+    "status": "throttle",
+    "miner": {
+      "name": "t-rex",
+      "coin": "ETH"
+    },
+    "gpus": [
+      { "id": 0, "model": "RTX 2080S", "hash_mhs": 42.1, "temp_c": 78, "fan_percent": 90, "power_w": 160, "status": "throttle" }
+    ],
+    "last_seen": "2025-11-10T14:49:50Z"
+  }
+]
