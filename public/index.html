@@ -1,87 +1,77 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GPU Çoban – Panel (Debug Build)</title>
-  <style>
-    :root{ --bg:#131722; --panel:#171b26; --muted:#a8b3c2; --text:#e8eef6; --brand:#f26b1d; --line:#232a36; --badge:#1a2030; }
-    html,body{height:100%} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    .container{max-width:1200px;margin:0 auto;padding:24px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
-    .badge{display:inline-block;padding:4px 8px;background:var(--badge);border:1px solid var(--line);border-radius:999px;margin-right:6px}
-    .err{background:#3a1f21;border-color:#6a2a2f;color:#ffd4d4}
-    a{color:#5aa6ff;text-decoration:none}
-    .muted{color:var(--muted)}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div>
-        <div style="font-weight:800">GPU Çoban – Panel <span class="muted">(Debug)</span></div>
-        <div class="muted">Miner bağımsız telemetri → <code>rigs.json</code> → Panel</div>
-      </div>
-      <div>
-        <a class="badge" href="#" id="refreshBtn">Yenile</a>
-        <a class="badge" href="./rigs.json" target="_blank">JSON’u Gör</a>
-      </div>
-    </div>
-    <div id="alert"></div>
-    <div id="view" class="card">Yükleniyor…</div>
-  </div>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GPU Çoban – Panel</title>
+<style>
+:root{
+/* HiveOS-like palette */
+--bg:#131722; --panel:#171b26; --muted:#a8b3c2; --text:#e8eef6; --brand:#f26b1d;
+--ok:#2ecc71; --warn:#f1c40f; --err:#e74c3c; --iso:#7f8c8d; --line:#232a36;
+--badge:#1a2030; --blue:#5aa6ff;
+}
+html,body{height:100%;}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.title{font-weight:800;letter-spacing:.3px}
+.title span{color:var(--brand)}
+.sub{color:var(--muted);font-size:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.24)}
+.pad{padding:16px 18px}
 
-  <script>
-  (function(){
-    function showError(msg){
-      var a = document.getElementById('alert');
-      a.innerHTML = '<div class="badge err">⚠️ '+String(msg)+'</div>';
-      console.error('[Panel]', msg);
-    }
-    function safe(fn){
-      try{ fn(); }catch(e){ showError(e && e.message ? e.message : e); }
-    }
-    function fetchJSON(url){
-      return fetch(url + (url.indexOf('?')>-1?'&':'?') + 'ts=' + Date.now()).then(function(res){
-        if(!res.ok) throw new Error('JSON yüklenemedi ('+res.status+')');
-        return res.json();
-      });
-    }
-    function fmt(n){ return (typeof n==='number') ? n.toFixed(2) : '—'; }
-    function renderList(rigs){
-      var html = '<div class="muted" style="margin-bottom:8px">Rig sayısı: '+rigs.length+'</div>';
-      html += '<div class="card" style="overflow:auto"><table border="0" cellpadding="8"><thead>'+
-              '<tr><th>Rig ID</th><th>Ad</th><th>GPU</th><th>Toplam Hash</th><th>Toplam Güç</th></tr></thead><tbody>';
-      for(var i=0;i<rigs.length;i++){
-        var r = rigs[i]; var gcount = (r.gpus && r.gpus.length) ? r.gpus.length : 0;
-        var mh = 0, w = 0;
-        if (r.gpus){ for(var j=0;j<r.gpus.length;j++){ var g=r.gpus[j]; if(typeof g.hash_mhs==='number') mh += g.hash_mhs; if(typeof g.power_w==='number') w += g.power_w; } }
-        html += '<tr><td>'+r.rig_id+'</td><td>'+(r.name||'—')+'</td><td>'+gcount+'</td><td>'+fmt(mh)+' MH/s</td><td>'+Math.round(w)+' W</td></tr>';
-      }
-      html += '</tbody></table></div>';
-      document.getElementById('view').innerHTML = html;
-    }
-    function normalize(data){
-      return Array.isArray(data) ? data : (data && Array.isArray(data.rigs) ? data.rigs : []);
-    }
-    function load(force){
-      safe(function(){
-        console.log('[Panel] load()', force);
-        fetchJSON('rigs.json' + (force? '?cache='+Math.random() : '')).then(function(data){
-          console.log('[Panel] rigs.json OK:', data);
-          var rigs = normalize(data);
-          renderList(rigs);
-        }).catch(function(e){
-          showError(e && e.message ? e.message : e);
-          document.getElementById('view').textContent = 'Veri yüklenemedi.';
-        });
-      });
-    }
-    document.getElementById('refreshBtn').addEventListener('click', function(e){ e.preventDefault(); load(true); });
-    // Boot
-    console.log('[Panel] JS OK, booting…');
-    load(false);
-  })();
-  </script>
-</body>
-</html>
+
+table{width:100%;border-collapse:separate;border-spacing:0;}
+thead th{color:#ffc9a8;background:linear-gradient(180deg, #1b2230 0%, #171b26 100%);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--line)}
+tbody tr:hover{background:#101522}
+
+
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--badge);font-size:12px}
+.b-ok{background:rgba(46,204,113,.12);color:#baf3cf;border-color:rgba(46,204,113,.24)}
+.b-warn{background:rgba(241,196,15,.12);color:#ffe9a3;border-color:rgba(241,196,15,.28)}
+.b-err{background:rgba(231,76,60,.12);color:#ffc1b8;border-color:rgba(231,76,60,.28)}
+.b-iso{background:rgba(127,140,141,.18);color:#e6eef8;border-color:rgba(127,140,141,.28)}
+.b-off{background:rgba(60,72,88,.26);color:#cdd6e3;border-color:rgba(60,72,88,.44)}
+
+
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.col{flex:1 1 320px}
+
+
+.toolbar{display:flex;align-items:center;gap:8px}
+.ghost{background:transparent;border:1px dashed var(--line);color:var(--muted);padding:10px 12px;border-radius:10px}
+.ghost[disabled]{opacity:.7;cursor:not-allowed}
+
+
+.muted{color:var(--muted)}
+.kv{display:grid;grid-template-columns:160px 1fr;gap:8px;font-size:13px}
+.kv div{padding:6px 0;border-bottom:1px dashed var(--line)}
+
+
+.link{color:var(--blue);text-decoration:none}
+.link:hover{text-decoration:underline}
+
+
+.footer{margin-top:16px;color:var(--muted);font-size:12px}
+.pill{padding:2px 8px;border:1px solid var(--line);border-radius:999px;color:#ffc9a8}
+
+
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);cursor:pointer}
+.chip.active{outline:2px solid var(--brand)}
+
+
+.totals{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:160px}
+.kpi .v{font-weight:700}
+
+
+/* Modal */
+.modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.45);backdrop-filter:blur(2px);padding:40px 12px;z-index:30}
+.modal.open{display:flex}
+.sheet{width:min(980px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.4)}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);border-top-left-radius:16px;border-top-right-radius:16px}
+.sheet-close{border:1px solid var(--line);background:#1a2030;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer}
