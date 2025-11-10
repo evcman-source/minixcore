@@ -1,93 +1,43 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GPU Çoban – Panel (SAFE v3)</title>
-<style>
-body{margin:0;background:#131722;color:#e8eef6;font:16px/1.45 system-ui,Segoe UI,Roboto,Arial}
-.container{max-width:1100px;margin:48px auto;padding:0 24px}
-.card{background:#171b26;border:1px solid #232a36;border-radius:12px;padding:24px}
-h1{font-size:24px;margin:0 0 16px}
-table{width:100%;border-collapse:collapse;margin-top:16px}
-th,td{padding:12px;border-bottom:1px solid #232a36;font-size:14px}
-.badge{padding:4px 8px;border-radius:6px;font-size:12px;background:#5aa6ff;color:#0e1016;display:inline-block}
-.err{color:#ff6b6b;font-size:14px;margin-bottom:16px}
-.link{color:#5aa6ff;text-decoration:none}
-.link:hover{text-decoration:underline}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GPU Çoban – Panel</title>
+  <style>
+    body{margin:0;background:#131722;color:#e8eef6;font:16px/1.45 system-ui,Segoe UI,Roboto,Arial}
+    .container{max-width:1100px;margin:48px auto;padding:0 24px}
+    .card{background:#171b26;border:1px solid #232a36;border-radius:12px;padding:24px}
+    h1{font-size:24px;margin:0 0 16px}
+    table{width:100%;border-collapse:collapse;margin-top:16px}
+    th,td{padding:12px;border-bottom:1px solid #232a36;font-size:14px;text-align:left}
+    .err{color:#ff6b6b;font-size:14px;margin-bottom:16px}
+    .link{color:#5aa6ff;text-decoration:none}
+    .link:hover{text-decoration:underline}
+    .kpi{display:inline-block;background:#171b26;border:1px solid #232a36;border-radius:10px;padding:10px 12px;margin-right:8px;margin-top:12px}
+    .kpi .v{font-weight:700}
+  </style>
+  <script src="./panel.js?v=1" defer></script>
 </head>
 <body>
-<div class="container">
-<h1>GPU Çoban – Panel (SAFE v3)</h1>
-<div id="err"></div>
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<div>Miner bağımsız telemetri → <code>rigs.json</code> → Panel</div>
-<a class="link" href="./rigs.json" target="_blank">JSON'u Gör</a>
-</div>
-<table id="rigTable">
-<tr><th>Rig ID</th><th>Ad</th><th>GPU</th><th>Toplam Hash</th><th>Toplam Güç</th></tr>
-</table>
-</div>
-</div>
+  <div class="container">
+    <h1>GPU Çoban – Panel</h1>
+    <div id="err"></div>
 
-<script>
-function showErr(msg){
-  var e=document.getElementById("err");
-  e.innerHTML='<div class="err">⚠ '+msg+'</div>';
-}
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>Miner bağımsız telemetri → <code>rigs.json</code> → Panel</div>
+        <a class="link" href="./rigs.json" target="_blank">JSON'u Gör</a>
+      </div>
 
-function load(){
-  try{
-    var x=new XMLHttpRequest();
-    x.open("GET","./rigs.json",true);
-    x.onreadystatechange=function(){
-      if(x.readyState===4){
-        if(x.status===200){
-          try{
-            var j=JSON.parse(x.responseText);
-            render(j);
-          }catch(e){
-            showErr("JSON parse hatası: "+e);
-          }
-        } else {
-          showErr("HTTP hatası: "+x.status);
-        }
-      }
-    };
-    x.send();
-  }catch(e){
-    showErr("Load hatası: "+e);
-  }
-}
+      <div id="kpi"></div>
 
-function render(data){
-  try{
-    var t=document.getElementById("rigTable");
-    if(!data || !data.rigs || !data.rigs.length){
-      t.innerHTML="<tr><td colspan='5'>Hiç rig yok</td></tr>";
-      return;
-    }
-    var rows="<tr><th>Rig ID</th><th>Ad</th><th>GPU</th><th>Toplam Hash</th><th>Toplam Güç</th></tr>";
-    for(var i=0;i<data.rigs.length;i++){
-      var r=data.rigs[i];
-      var g=0; var h="0"; var p="0";
-      if(r.gpus && r.gpus.length>0){
-        g=r.gpus.length;
-        h=String(r.gpus[0].hash_mhs||"0")+" MH/s";
-        p=String(r.gpus[0].power_wt||"0")+" W";
-      }
-      rows+= "<tr><td>"+r.rig_id+"</td><td>"+r.name+"</td><td>"+g+"</td><td>"+h+"</td><td>"+p+"</td></tr>";
-    }
-    t.innerHTML=rows;
-  }catch(e){
-    showErr("Render hatası: "+e);
-  }
-}
-
-load();
-</script>
-
+      <table id="rigTable">
+        <tr>
+          <th>Rig ID</th><th>Ad</th><th>GPU</th><th>Toplam Hash</th><th>Toplam Güç</th>
+        </tr>
+      </table>
+    </div>
+  </div>
 </body>
 </html>
