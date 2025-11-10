@@ -1,105 +1,144 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GPU Çoban – Panel</title>
+
   <style>
-    :root{ --bg:#131722; --panel:#171b26; --muted:#a8b3c2; --text:#e8eef6; --brand:#f26b1d; --ok:#2ecc71; --warn:#f1c40f; --err:#e74c3c; --iso:#7f8c8d; --line:#232a36; --badge:#1a2030; --blue:#5aa6ff; }
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    .container{max-width:1200px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-    .title{font-weight:800;letter-spacing:.3px}
-    .title span{color:var(--brand)}
-    .sub{color:var(--muted);font-size:12px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.24)}
-    .pad{padding:16px 18px}
-    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    input[type="text"]{background:#101522;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--text)}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);cursor:pointer}
-    .chip.active{outline:2px solid var(--brand)}
-    .totals{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
-    .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:160px}
-    .kpi .v{font-weight:700}
-    .notice{font-size:13px;color:#ffc9a8;margin-bottom:8px;display:none}
-    table{width:100%;border-collapse:separate;border-spacing:0}
-    thead th{color:#ffc9a8;background:linear-gradient(180deg,#1b2230 0%,#171b26 100%);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer}
-    tbody td{padding:12px 14px;border-bottom:1px solid var(--line)}
-    tbody tr:hover{background:#101522}
-    .badges{display:flex;gap:6px;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--badge);font-size:12px}
-    .b-ok{background:rgba(46,204,113,.12);color:#baf3cf;border-color:rgba(46,204,113,.24)}
-    .b-warn{background:rgba(241,196,15,.12);color:#ffe9a3;border-color:rgba(241,196,15,.28)}
-    .b-err{background:rgba(231,76,60,.12);color:#ffc1b8;border-color:rgba(231,76,60,.28)}
-    .b-iso{background:rgba(127,140,141,.18);color:#e6eef8;border-color:rgba(127,140,141,.28)}
-    .b-off{background:rgba(60,72,88,.26);color:#cdd6e3;border-color:rgba(60,72,88,.44)}
-    .pill{padding:2px 8px;border:1px solid var(--line);border-radius:999px;color:#ffc9a8}
-    .link{color:var(--blue);text-decoration:none}
-    .link:hover{text-decoration:underline}
-    /* Modal */
-    .modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.45);backdrop-filter:blur(2px);padding:40px 12px;z-index:30}
-    .modal.open{display:flex}
-    .sheet{width:min(980px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.4)}
-    .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);border-top-left-radius:16px;border-top-right-radius:16px}
-    .sheet-close{border:1px solid var(--line);background:#1a2030;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer}
-    .row{display:flex;gap:16px;flex-wrap:wrap}
-    .col{flex:1 1 320px}
-    .kv{display:grid;grid-template-columns:160px 1fr;gap:8px;font-size:13px}
-    .kv div{padding:6px 0;border-bottom:1px dashed var(--line)}
-    .muted{color:var(--muted)}
+    body {
+      margin: 0;
+      background: #111827;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 32px;
+    }
+    h1 {
+      font-weight: normal;
+      margin-bottom: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1f2937;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid #283046;
+      font-size: 15px;
+    }
+    th {
+      background: #283046;
+      text-align: left;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: #2d3647;
+    }
+    .chip {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #374151;
+      border-radius: 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .chip:hover {
+      background: #4b5563;
+    }
+    #kpi {
+      margin-bottom: 20px;
+    }
+    #kpi .chip {
+      margin-right: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* MODAL */
+    #rigModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+    .sheet {
+      background: #1f2937;
+      width: 90%;
+      max-width: 700px;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .close-btn {
+      background: #b91c1c;
+      color: #fff;
+    }
+    .gpu-table th {
+      background: #283046;
+    }
+    .sheet-row {
+      margin: 6px 0;
+    }
+    .sheet-sep {
+      height: 1px;
+      background: #283046;
+      margin: 16px 0;
+    }
   </style>
-  <!-- HARİCİ JS -->
-  <script src="./panel.js?v=3" defer></script>
+
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>
-        <div class="title">GPU Çoban <span>– Panel</span></div>
-        <div class="sub">Miner bağımsız telemetri → <code>rigs.json</code> → Panel</div>
-      </div>
-      <div class="badges">
-        <span class="badge" id="pulse">⟳ Son çekim: –</span>
-        <a class="badge" href="#" id="refreshBtn">Yenile</a>
-        <a class="badge" href="./rigs.json" target="_blank">JSON'u Gör</a>
-      </div>
-    </header>
 
-    <div id="offlineBanner" class="notice">Çevrimdışı – panel eski veriyi gösteriyor.</div>
+<div class="container">
 
-    <div class="card pad" style="margin-bottom:12px">
-      <div class="toolbar" style="justify-content:space-between">
-        <div class="chips" id="chips"></div>
-        <input id="q" type="text" placeholder="Rig ara…" />
-      </div>
-      <div class="totals" id="totals"></div>
-      <div id="view" style="margin-top:8px"></div>
-    </div>
+  <h1>GPU Çoban – Canlı Panel</h1>
 
-    <div class="card pad" id="shepherdMsg">
-      <div style="font-weight:700;margin-bottom:6px">AI GPU Çoban – Ne yapıyor?</div>
-      <div class="muted">• Telemetry’den sıcaklık/hash/power izler; eşik aşımlarında <em>throttle</em> ve <em>isolated</em> önerisi üretir. • Hash düşüşü > %20 ise “Miner restart” önerir. • Riser/hata şüphesi varsa “Find GPU/İzole” önerir. (SSH bağlanınca komut kuyruğu ile uygulanacak.)</div>
-    </div>
+  <!-- KPI alanı (Toplam Hash, Güç, Rig sayısı) -->
+  <div id="kpi"></div>
 
-    <div class="muted" style="margin-top:12px">Proje: <a class="link" href="https://github.com/evcman-source/minixcore" target="_blank">evcman-source/minixcore</a> · Hosting: Firebase · Veri: <code>public/rigs.json</code></div>
+  <!-- Ana tablo -->
+  <table>
+    <thead>
+      <tr>
+        <th>Rig</th>
+        <th>GPU</th>
+        <th>Hash</th>
+        <th>Güç</th>
+        <th>Son Görülme</th>
+        <th>Detay</th>
+      </tr>
+    </thead>
+    <tbody id="rigRows"></tbody>
+  </table>
+
+</div>
+
+<!-- DETAY MODAL -->
+<div id="rigModal">
+  <div class="sheet">
+    <div id="rigDetailBody"></div>
   </div>
+</div>
 
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="sheet">
-      <div class="sheet-head">
-        <div id="sheetTitle">Rig Detayı</div>
-        <div class="toolbar">
-          <button class="chip" disabled title="SSH yokken pasif">İzole Et</button>
-          <button class="chip" disabled title="SSH yokken pasif">OC Reset</button>
-          <button class="chip" disabled title="SSH yokken pasif">Miner Restart</button>
-          <button class="sheet-close" id="closeModal">✕</button>
-        </div>
-      </div>
-      <div class="pad" id="sheetBody"></div>
-    </div>
-  </div>
+<!-- Panel Script -->
+<script type="module" src="./panel.js?v=RTDB1"></script>
+
 </body>
 </html>
