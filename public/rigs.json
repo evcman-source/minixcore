@@ -1,10 +1,58 @@
 {
   "rigs": [
     {
-      "id": "rig-1",
-      "name": "Rig 1",
-      "status": "online",
-      "gpus": [{"id":"GPU0","model":"NVIDIA GeForce GTX 1060 6GB","temp":29,"fan":38,"power":8.42,"hash":0}]
+      "rig_id": "rig-1",
+      "name": "Ev - Test PC",
+      "last_seen": "2025-11-10T08:30:00Z",
+      "miner": { "name": "gminer", "version": "3.45", "coin": "RVN" },
+      "gpus": [
+        {
+          "id": 0,
+          "model": "RTX 3060 12GB",
+          "temp_c": 58,
+          "fan_percent": 55,
+          "power_w": 118,
+          "util_pct": 97,
+          "hash_mhs": 24.70,
+          "power_limit_w": 140,
+          "status": "ok"
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "rig_id": "rig-2",
+      "name": "Garaj Rig",
+      "last_seen": "2025-11-10T08:28:00Z",
+      "miner": { "name": "lolMiner", "version": "1.87", "coin": "ETC" },
+      "gpus": [
+        {
+          "id": 0,
+          "model": "RX 580 8GB",
+          "temp_c": 76,
+          "fan_percent": 80,
+          "power_w": 125,
+          "util_pct": 68,
+          "hash_mhs": 30.20,
+          "power_limit_w": 140,
+          "status": "throttle"
+        },
+        {
+          "id": 1,
+          "model": "RX 580 8GB",
+          "temp_c": 60,
+          "fan_percent": 45,
+          "power_w": 112,
+          "util_pct": 95,
+          "hash_mhs": 31.10,
+          "power_limit_w": 140,
+          "status": "ok"
+        }
+      ],
+      "warnings": [
+        "GPU0 sıcaklık yüksek – throttle",
+        "GPU0 hash düşüşü %12"
+      ]
     }
   ]
 }
