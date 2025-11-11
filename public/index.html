@@ -1,152 +1,160 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPU Çoban – Panel</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GPU Çoban — Canlı Panel</title>
   <style>
-    body {
-      margin: 0;
-      background: #111827;
-      color: #fff;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 32px;
-    }
-    h1 {
-      font-weight: normal;
-      margin-bottom: 24px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #1f2937;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 14px;
-      border-bottom: 1px solid #283046;
-      font-size: 15px;
-    }
-    th {
-      background: #283046;
-      text-align: left;
-      font-weight: 600;
-    }
-    tr:hover { background: #2d3647; }
-
-    .chip {
-      display: inline-block;
-      padding: 6px 12px;
-      background: #374151;
-      border-radius: 14px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .chip:hover { background: #4b5563; }
-
-    #kpi { margin-bottom: 20px; }
-    #kpi .chip { margin-right: 6px; margin-bottom: 8px; }
-
-    /* Snackbar */
-    #snack {
-      visibility: hidden;
-      min-width: 220px;
-      background: #10b981;
-      color: #fff;
-      text-align: center;
-      border-radius: 6px;
-      padding: 12px;
-      position: fixed;
-      z-index: 9999;
-      left: 50%;
-      bottom: 40px;
-      transform: translateX(-50%);
-      font-size: 15px;
-    }
-    #snack.show {
-      visibility: visible;
-      animation: fadein 0.4s, fadeout 0.4s 2.2s;
-    }
-    @keyframes fadein { from{bottom:20px;opacity:0;} to{bottom:40px;opacity:1;} }
-    @keyframes fadeout { from{bottom:40px;opacity:1;} to{bottom:20px;opacity:0;} }
-
-    /* MODAL */
-    #rigModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 999;
-    }
-    .sheet {
-      background: #1f2937;
-      width: 90%;
-      max-width: 700px;
-      border-radius: 10px;
-      padding: 20px;
-    }
-    .sheet-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-    .close-btn { background: #b91c1c; }
-    .gpu-table th { background: #283046; }
-    .sheet-row { margin: 6px 0; }
-    .sheet-sep {
-      height: 1px;
-      background: #283046;
-      margin: 16px 0;
-    }
+    :root{--bg:#111827;--panel:#1f2937;--text:#e5e7eb;--muted:#9ca3af;--ok:#10b981;--warn:#f59e0b;--err:#ef4444;--line:#374151;--brand:#60a5fa}
+    html,body{height:100%} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .wrap{max-width:1100px;margin:56px auto;padding:0 20px}
+    h1{font-size:28px;margin:0 0 18px}
+    .cards{display:flex;gap:8px;margin:0 0 12px}
+    .badge{display:inline-flex;align-items:center;gap:6px;background:var(--panel);padding:8px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px}
+    .box{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:14px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
+    thead th{color:#cbd5e1}
+    .btn{background:#111827;border:1px solid var(--line);color:var(--text);padding:8px 10px;border-radius:8px;cursor:pointer}
+    .btn:hover{border-color:#6b7280}
+    .pill{padding:4px 8px;border-radius:999px;font-size:12px;border:1px solid var(--line)}
+    .online{color:#10b981;border-color:#10b981}
+    .offline{color:#9ca3af}
+    .toolbar{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:10px}
+    .muted{color:var(--muted)}
+    a{color:#93c5fd;text-decoration:none}
   </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <h1>GPU Çoban — Canlı Panel</h1>
 
-<div class="container">
-  <h1>GPU Çoban – Canlı Panel</h1>
+    <div class="cards" id="totals">
+      <div class="badge" id="sumHash">Toplam Hash: 0.00 MH/s</div>
+      <div class="badge" id="sumPower">Güç: 0 W</div>
+      <div class="badge" id="rigCount">Rig: 0</div>
+    </div>
 
-  <!-- KPI alanı -->
-  <div id="kpi"></div>
+    <div class="toolbar">
+      <button class="btn" onclick="manualRefresh()">Yenile</button>
+    </div>
 
-  <!-- Ana tablo -->
-  <table>
-    <thead>
-      <tr>
-        <th>Rig</th>
-        <th>GPU</th>
-        <th>Hash</th>
-        <th>Güç</th>
-        <th>Son Görülme</th>
-        <th>Detay</th>
-      </tr>
-    </thead>
-    <tbody id="rigRows"></tbody>
-  </table>
-</div>
+    <div class="box">
+      <table>
+        <thead>
+          <tr>
+            <th>Rig</th>
+            <th>GPU</th>
+            <th>Hash</th>
+            <th>Güç</th>
+            <th>Son Görülme</th>
+            <th>İşlem</th>
+          </tr>
+        </thead>
+        <tbody id="rigRows">
+          <tr><td colspan="6" class="muted" style="padding:18px">Yükleniyor…</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-<!-- DETAY MODAL -->
-<div id="rigModal">
-  <div class="sheet">
-    <div id="rigDetailBody"></div>
+    <p class="muted" style="margin-top:12px">
+      Panel okuma yönlüdür. Rig adını panelden değiştirdiğinizde watcher bunu kalıcı yapar; miner tarafı worker adını
+      <code>/etc/gpu-coban/alias.env</code> dosyasından alır.
+    </p>
   </div>
-</div>
 
-<!-- Snackbar -->
-<div id="snack"></div>
+  <script>
+  // ===================== Basit REST tabanlı panel =====================
+  const BASE = "https://gpu-coban-default-rtdb.europe-west1.firebasedatabase.app";
 
-<script type="module" src="./panel.js?v=CMD1"></script>
+  const $rows = document.getElementById('rigRows');
+  const $sumHash = document.getElementById('sumHash');
+  const $sumPower = document.getElementById('sumPower');
+  const $rigCount = document.getElementById('rigCount');
+
+  function fmtMH(v){ return (Number(v)||0).toFixed(2) + " MH/s" }
+  function fmtW(v){ return (Number(v)||0) + " W" }
+  function fromNow(ts){
+    if(!ts) return "—";
+    const sec = Math.max(0, Math.floor((Date.now() - Number(ts))/1000));
+    if(sec<60) return sec + " sn önce";
+    const m = Math.floor(sec/60); if(m<60) return m + " dk önce";
+    const h = Math.floor(m/60); return h + " sa önce";
+  }
+
+  async function fetchJSON(path){
+    const res = await fetch(`${BASE}${path}.json`, {cache:"no-store"});
+    return await res.json();
+  }
+
+  async function load(){
+    const rigs = await fetchJSON(`/rigs`) || {};
+    render(rigs);
+  }
+
+  function render(rigs){
+    const ids = Object.keys(rigs);
+    let html = "";
+    let sumHash = 0, sumPower = 0;
+
+    ids.forEach(id=>{
+      const r = rigs[id] || {};
+      const alias = r._alias || (id.startsWith("worker-")? id : (r._host || id));
+      const gpu = r.gpu ?? (r.gpus ? r.gpus.length : 0);
+      const hash = r.totals?.hash_mhs ?? 0;
+      const power = r.totals?.power_w ?? 0;
+      const ts = r._ts || r.last_seen;
+
+      sumHash += Number(hash)||0;
+      sumPower += Number(power)||0;
+
+      html += `
+        <tr>
+          <td>${alias}</td>
+          <td>${gpu}</td>
+          <td>${fmtMH(hash)}</td>
+          <td>${fmtW(power)}</td>
+          <td>${fromNow(ts)}</td>
+          <td>
+            <button class="btn" onclick="renameRig('${id}')">Yeniden Adlandır</button>
+            <button class="btn" onclick="viewDetail('${id}')">Detay</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    if(!ids.length){
+      html = `<tr><td colspan="6" class="muted" style="padding:18px">Rig yok.</td></tr>`;
+    }
+
+    $rows.innerHTML = html;
+    $sumHash.textContent = `Toplam Hash: ${fmtMH(sumHash)}`;
+    $sumPower.textContent = `Güç: ${fmtW(sumPower)}`;
+    $rigCount.textContent = `Rig: ${ids.length}`;
+  }
+
+  async function renameRig(rigId){
+    const obj = await fetchJSON(`/rigs/${rigId}`) || {};
+    const cur = obj._alias || obj._host || rigId;
+    const val = prompt("Yeni isim (örn: Rig-01)", cur);
+    if(!val) return;
+
+    await fetch(`${BASE}/rigs/${rigId}.json`, {
+      method: "PATCH",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({_alias: val.trim(), _alias_updated: Date.now()})
+    });
+    alert("İsim güncellendi.");
+    manualRefresh();
+  }
+
+  function viewDetail(rigId){
+    window.open(`https://gpu-coban-default-rtdb.europe-west1.firebasedatabase.app/rigs/${rigId}.json`,'_blank');
+  }
+
+  function manualRefresh(){ load(); }
+  setInterval(load, 5000);
+  load();
+  </script>
 </body>
 </html>
