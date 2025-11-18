@@ -1,6 +1,12 @@
 {
-  "generated_at": "2025-11-18T15:22:52Z",
+  "generated_at": "2025-11-18T15:23:02Z",
   "messages": [
+    {
+      "source": "coban",
+      "ts": "2025-11-18T15:22:52",
+      "level": "INFO",
+      "text": "GPU0: 67.0°C, 80.72W, 34.29/35.00 MH/s (%98.0) → PL=96W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
+    },
     {
       "source": "coban",
       "ts": "2025-11-18T15:22:37",
@@ -354,12 +360,6 @@
       "ts": "2025-11-18T15:08:19",
       "level": "INFO",
       "text": "GPU0: 67.0°C, 80.62W, 34.48/35.00 MH/s (%98.5) → PL=96W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
-    },
-    {
-      "source": "coban",
-      "ts": "2025-11-18T15:08:04",
-      "level": "INFO",
-      "text": "GPU0: 67.0°C, 80.62W, 34.49/35.00 MH/s (%98.5) → PL=96W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
     }
   ]
 }
