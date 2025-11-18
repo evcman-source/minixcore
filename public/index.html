@@ -748,24 +748,24 @@
       <!-- Summary cards -->
       <section class="summary-grid">
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">Toplam Rig</div>
-            <div class="card-badge">🐑 Sürü</div>
-          </div>
-          <div class="card-main-value">5 Rig</div>
-          <div class="card-sub">38 aktif GPU, 2 izole</div>
-          <div class="card-tag-row">
-            <span class="tag-pill ok">4 OK</span>
-            <span class="tag-pill warn">1 Uyarı</span>
-          </div>
-        </div>
+  <div class="card-header">
+    <div class="card-title">Toplam Rig</div>
+    <div class="card-badge">🐑 Sürü</div>
+  </div>
+  <div class="card-main-value" id="summary-total-rigs">–</div>
+  <div class="card-sub" id="summary-total-rigs-sub">Yükleniyor...</div>
+  <div class="card-tag-row">
+    <span class="tag-pill ok">Veri: rigs.json</span>
+  </div>
+</div>
+
 
         <div class="card">
           <div class="card-header">
             <div class="card-title">Toplam Hashrate</div>
             <div class="card-badge">⛏️ Kazım</div>
           </div>
-          <div class="card-main-value">1.24 GH/s</div>
+          <div class="card-main-value" data-summary="total-hash-main">1.24 GH/s</div>
           <div class="card-sub">RVN / ETC / KAS karışık</div>
           <div class="card-tag-row">
             <span class="tag-pill">En yüksek: Rig-02</span>
@@ -777,7 +777,7 @@
             <div class="card-title">Toplam Güç</div>
             <div class="card-badge">⚡ Güç</div>
           </div>
-          <div class="card-main-value">4.2 kW</div>
+          <div class="card-main-value" data-summary="total-power-main">4.2 kW</div>
           <div class="card-sub">Tahmini verim: 0.29 GH/s / kW</div>
           <div class="card-tag-row">
             <span class="tag-pill">Hedef: ↓ Watt</span>
@@ -789,8 +789,8 @@
             <div class="card-title">Sıcaklık & Sağlık</div>
             <div class="card-badge">🔥 / 🧊</div>
           </div>
-          <div class="card-main-value">58°C ort.</div>
-          <div class="card-sub">2 GPU yüksek sıcaklık bandında</div>
+          <div class="card-main-value" data-summary="temp-main">58°C ort.</div>
+          <div class="card-sub" data-summary="temp-sub">2 GPU yüksek sıcaklık bandında</div>
           <div class="card-tag-row">
             <span class="tag-pill ok">Stabil %90</span>
             <span class="tag-pill warn">Takip ediliyor</span>
