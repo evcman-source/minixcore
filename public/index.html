@@ -6,367 +6,349 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --bg: #020617;
-      --bg-alt: #05081a;
-      --bg-card: #050b1f;
-      --bg-card-soft: #070f26;
-      --accent: #22d3ee;
-      --accent-soft: rgba(34, 211, 238, 0.16);
-      --accent-strong: #38bdf8;
+      --bg: #050816;
+      --bg-alt: #070b22;
+      --card: #0b1024;
+      --card-soft: #111632;
+      --accent: #38bdf8;
+      --accent-2: #a855f7;
+      --accent-3: #f97316;
       --ok: #22c55e;
-      --warn: #f59e0b;
-      --crit: #ef4444;
+      --warn: #facc15;
+      --crit: #f97373;
       --text: #e5e7eb;
-      --text-muted: #9ca3af;
+      --muted: #9ca3af;
       --border: #1f2937;
       --radius-lg: 18px;
-      --radius-md: 12px;
-      --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.75);
+      --radius-md: 14px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
     }
 
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #020617 0, #000 55%);
+      background: radial-gradient(circle at top, #111827 0, #020617 55%);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
     }
 
     .app {
-      width: 100%;
-      max-width: 1500px;
-      margin: 16px;
       display: grid;
-      grid-template-columns: 70px minmax(0, 1.9fr) minmax(0, 1.1fr);
-      border-radius: 26px;
-      background: linear-gradient(135deg, #020617 0, #020617 40%, #030712 100%);
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.15);
+      grid-template-columns: 78px minmax(0, 1fr);
+      max-width: 1440px;
+      margin: 16px auto;
+      border-radius: 24px;
       overflow: hidden;
+      background: linear-gradient(135deg, #020617 0, #020617 40%, #020315 100%);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.85);
     }
 
     /* Sidebar */
     .sidebar {
-      background: radial-gradient(circle at 0 0, #0f172a 0, #020617 60%);
-      border-right: 1px solid rgba(15, 23, 42, 0.9);
-      padding: 14px 10px;
+      background: radial-gradient(circle at top left, #111827 0, #020617 60%);
+      border-right: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 16px 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
     }
 
-    .sidebar-logo {
-      width: 40px;
-      height: 40px;
+    .logo-circle {
+      width: 46px;
+      height: 46px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 0, #22d3ee 0, #6366f1 45%, #020617 100%);
+      background: radial-gradient(circle at 30% 20%, #5ee7ff 0, #2563eb 40%, #020617 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 10px 28px rgba(37, 99, 235, 0.8);
+      font-size: 26px;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.7);
     }
 
-    .sidebar-nav {
-      margin-top: 8px;
+    .nav-stack {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
+      margin-top: 8px;
     }
 
     .nav-icon {
       width: 40px;
       height: 40px;
-      border-radius: 16px;
+      border-radius: 999px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      color: var(--text-muted);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(30, 64, 175, 0.5);
       cursor: pointer;
-      border: 1px solid transparent;
-      background: rgba(15, 23, 42, 0.75);
-      transition: all 0.15s ease-out;
+      transition: all 0.18s ease-out;
     }
 
     .nav-icon.active {
-      border-color: rgba(34, 211, 238, 0.8);
-      color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.3);
-      background: radial-gradient(circle at 30% 0, #0ea5e9 0, #1d4ed8 45%, #020617 100%);
+      color: var(--text);
+      background: radial-gradient(circle at 30% 20%, #22d3ee 0, #6366f1 45%, #020617 100%);
+      border-color: rgba(94, 234, 212, 0.6);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+      transform: translateY(-1px);
     }
 
     .nav-icon:hover:not(.active) {
-      border-color: rgba(55, 65, 81, 0.9);
-      color: #e5e7eb;
+      border-color: rgba(148, 163, 184, 0.8);
+      transform: translateY(-1px);
     }
 
-    .sidebar-footer {
+    .sidebar-bottom {
       margin-top: auto;
-      font-size: 11px;
-      color: var(--text-muted);
+      font-size: 10px;
+      color: var(--muted);
       text-align: center;
+      opacity: 0.8;
     }
 
-    .sidebar-footer span {
-      display: block;
-    }
-
-    /* Main column left (dashboard) */
+    /* Main layout */
     .main {
-      padding: 18px 18px 18px 18px;
+      padding: 18px 20px 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      border-right: 1px solid rgba(15, 23, 42, 0.9);
+      gap: 16px;
     }
 
-    .topbar {
+    .top-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
     }
 
-    .topbar-title {
+    .top-row-title {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
 
-    .topbar-title h1 {
-      font-size: 20px;
+    .top-row-title h1 {
+      font-size: 22px;
       font-weight: 600;
       letter-spacing: 0.02em;
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .topbar-title small {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .topbar-actions {
-      display: flex;
-      align-items: center;
       gap: 8px;
     }
 
-    .chip-status {
+    .top-row-title small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .top-row-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chip {
       font-size: 12px;
+      padding: 4px 10px;
       border-radius: 999px;
-      padding: 4px 9px;
-      border: 1px solid rgba(34, 197, 94, 0.7);
-      background: rgba(22, 163, 74, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.7);
+      background: rgba(22, 163, 74, 0.16);
       color: #bbf7d0;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-    }
-
-    .btn-ghost,
-    .btn-refresh {
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      background: rgba(15, 23, 42, 0.95);
-      padding: 6px 11px;
-      font-size: 12px;
-      color: var(--text);
-      display: inline-flex;
-      align-items: center;
       gap: 6px;
-      cursor: pointer;
-      transition: all 0.15s ease-out;
     }
 
-    .btn-ghost:hover,
-    .btn-refresh:hover {
-      border-color: rgba(75, 85, 99, 0.95);
-      background: rgba(17, 24, 39, 0.98);
-    }
-
-    .btn-avatar {
-      width: 30px;
-      height: 30px;
+    .select-compact {
+      font-size: 12px;
       border-radius: 999px;
       border: 1px solid rgba(55, 65, 81, 0.9);
-      background: radial-gradient(circle at 20% 0, #f472b6 0, #6366f1 50%, #020617 100%);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 5px 9px;
+      outline: none;
+    }
+
+    .top-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at 20% 0, #f472b6 0, #6366f1 45%, #020617 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      cursor: pointer;
+      font-size: 18px;
+      cursor: default;
     }
 
-    /* Summary cards */
-    .summary-grid {
+    /* Top summary block (tek büyük blok) */
+    .summary-block {
+      margin-top: 4px;
+      background: radial-gradient(circle at top left, #111827 0, #020617 70%);
+      border-radius: 20px;
+      padding: 16px 18px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      box-shadow: var(--shadow-soft);
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .summary-left {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
     }
 
-    .card {
-      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
-      border-radius: var(--radius-lg);
-      padding: 10px 12px;
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-    }
-
-    .card-header {
+    .summary-title-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 4px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
+      align-items: center;
+      gap: 12px;
     }
 
-    .card-icon {
+    .summary-title-main {
       font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
     }
 
-    .card-main {
+    .summary-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .summary-metrics {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 4px;
     }
 
-    .card-value {
+    .summary-pill {
+      min-width: 150px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .summary-pill-main {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .summary-pill-value {
       font-size: 18px;
       font-weight: 600;
+      color: var(--accent);
     }
 
-    .card-sub {
+    .summary-pill-value.alt {
+      color: var(--accent-2);
+    }
+
+    .summary-pill-value.warn {
+      color: var(--accent-3);
+    }
+
+    .summary-pill-delta {
       font-size: 11px;
-      color: var(--text-muted);
+      color: var(--muted);
+      margin-top: 2px;
     }
 
-    .card-tag {
-      margin-top: 4px;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-muted);
-    }
-
-    /* Middle AI cards */
-    .ai-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .ai-card {
-      background: radial-gradient(circle at top, #020617 0, #020617 60%, #010414 100%);
-      border-radius: var(--radius-lg);
-      padding: 10px 12px;
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ai-card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background: radial-gradient(circle at 0 0, rgba(34, 211, 238, 0.12) 0, transparent 55%);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .ai-card-inner {
-      position: relative;
+    .summary-right {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
-    .ai-title {
-      font-size: 12px;
-      font-weight: 500;
+    .summary-right-title {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .summary-right-big {
+      font-size: 24px;
+      font-weight: 600;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .summary-right-big span.unit {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Sparkline container */
+    .sparkline {
+      margin-top: 8px;
+      width: 100%;
+      height: 70px;
+      border-radius: 14px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(3, 7, 18, 0.95));
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 8px 10px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
     }
 
-    .ai-pill {
-      font-size: 10px;
-      border-radius: 999px;
-      padding: 1px 6px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      color: var(--text-muted);
+    .sparkline svg {
+      width: 100%;
+      height: 100%;
     }
 
-    .ai-main-value {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .ai-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .ai-meta-row {
+    /* Middle 3 cards row */
+    .middle-row {
       margin-top: 4px;
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      font-size: 10px;
-      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    .ai-pill-warn {
-      border-color: rgba(245, 158, 11, 0.8);
-      color: #fed7aa;
-    }
-
-    .ai-pill-crit {
-      border-color: rgba(239, 68, 68, 0.8);
-      color: #fecaca;
-    }
-
-    /* Lower layout: rigs list on left, logs on right column (within left main) */
-    .rigs-panel {
-      margin-top: 4px;
-      background: var(--bg-alt);
+    .mid-card {
       border-radius: var(--radius-lg);
-      padding: 10px 12px;
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      box-shadow: 0 15px 36px rgba(0, 0, 0, 0.7);
+      padding: 12px 13px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: radial-gradient(circle at top left, #0b1120 0, #020617 70%);
+      box-shadow: var(--shadow-soft);
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .panel-header {
+    .mid-card-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      gap: 6px;
     }
 
-    .panel-title {
+    .mid-card-title {
       font-size: 13px;
       font-weight: 500;
       display: flex;
@@ -374,47 +356,97 @@
       gap: 6px;
     }
 
-    .panel-sub {
+    .mid-card-title span.icon {
+      font-size: 18px;
+    }
+
+    .mid-card-tag {
       font-size: 11px;
-      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--muted);
     }
 
-    .link-small {
-      font-size: 11px;
-      color: var(--accent);
-      cursor: pointer;
+    .mid-card-main {
+      font-size: 20px;
+      font-weight: 600;
     }
 
-    .link-small:hover {
-      text-decoration: underline;
+    .mid-card-sub {
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    .rigs-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .mid-card-graph {
+      margin-top: 6px;
+      height: 52px;
+      border-radius: 10px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.96));
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 6px 8px;
+    }
+
+    .mid-card-graph svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .mid-card.empty {
+      opacity: 0.45;
+      border-style: dashed;
+      border-color: rgba(107, 114, 128, 0.7);
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.95),
+        rgba(3, 7, 18, 0.98)
+      );
+    }
+
+    .mid-card-empty-text {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Rig cards row */
+    .rig-row {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 4px;
     }
 
     .rig-card {
-      background: linear-gradient(135deg, #020617 0, #020617 45%, #020617 100%);
-      border-radius: 14px;
-      padding: 8px 10px;
+      border-radius: 18px;
+      padding: 12px 13px;
       border: 1px solid rgba(31, 41, 55, 0.95);
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.3fr) auto;
-      align-items: center;
-      gap: 10px;
+      background: radial-gradient(circle at top left, #111827 0, #020617 70%);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       cursor: pointer;
-      transition: all 0.15s ease-out;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out,
+        border-color 0.18s ease-out;
     }
 
     .rig-card:hover {
+      transform: translateY(-2px);
       border-color: rgba(56, 189, 248, 0.8);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
-      transform: translateY(-1px);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.9);
     }
 
-    .rig-main {
+    .rig-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .rig-header-left {
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -424,17 +456,50 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 500;
     }
 
-    .rig-status-pill {
-      font-size: 10px;
-      padding: 1px 7px;
+    .rig-name-row span.icon {
+      font-size: 18px;
+    }
+
+    .rig-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .rig-header-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .rig-hash {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .rig-hash small {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .rig-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .rig-status-chip {
+      align-self: flex-start;
+      font-size: 11px;
+      padding: 2px 7px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
     .rig-status-ok {
@@ -444,342 +509,77 @@
     }
 
     .rig-status-warn {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(251, 191, 36, 0.75);
+      background: rgba(245, 158, 11, 0.13);
+      border: 1px solid rgba(251, 191, 36, 0.8);
       color: #fed7aa;
     }
 
-    .rig-status-crit {
-      background: rgba(248, 113, 113, 0.16);
-      border: 1px solid rgba(248, 113, 113, 0.85);
-      color: #fecaca;
-    }
-
-    .rig-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .rig-metrics {
+    .rig-footer {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 11px;
-    }
-
-    .metric-pill {
-      padding: 3px 7px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      color: var(--text-muted);
-    }
-
-    .rig-side {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .rig-side .badge-small {
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .rig-side .btn-mini {
-      font-size: 11px;
-      border-radius: 999px;
-      padding: 3px 8px;
-      border: 1px solid rgba(56, 189, 248, 0.9);
-      background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 55%, #020617 100%);
-      color: #e5f4ff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .rig-side .btn-mini:hover {
-      opacity: 0.92;
-    }
-
-    /* Right column: logs */
-    .right-column {
-      padding: 18px 16px 18px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .log-panel {
-      background: var(--bg-alt);
-      border-radius: var(--radius-lg);
-      padding: 10px 12px;
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      height: 100%;
-    }
-
-    .log-list {
-      margin-top: 4px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 11px;
-      max-height: calc(100vh - 220px);
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .log-item {
-      border-radius: 10px;
-      padding: 6px 7px;
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      background: rgba(15, 23, 42, 0.96);
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      line-height: 1.4;
-    }
-
-    .log-item-header {
-      display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 4px;
-    }
-
-    .log-item-title {
-      display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .log-badge {
-      font-size: 10px;
-      border-radius: 999px;
-      padding: 1px 6px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      color: var(--text-muted);
-    }
-
-    .log-warn {
-      border-color: rgba(245, 158, 11, 0.8);
-      background: rgba(120, 53, 15, 0.35);
-    }
-
-    .log-crit {
-      border-color: rgba(239, 68, 68, 0.85);
-      background: rgba(127, 29, 29, 0.4);
-    }
-
-    .log-meta {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    /* Modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.75);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal {
-      width: min(880px, 96vw);
-      max-height: 90vh;
-      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
-      border-radius: 18px;
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9);
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
       gap: 10px;
     }
 
-    .modal-title {
+    .rig-footer-left {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
     }
 
-    .modal-title h2 {
-      font-size: 16px;
-      font-weight: 600;
+    .rig-footer-right {
+      display: flex;
+      gap: 6px;
     }
 
-    .modal-title small {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .btn-close {
+    .btn-mini {
+      padding: 3px 9px;
       border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
       background: rgba(15, 23, 42, 0.95);
-      width: 26px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--text-muted);
-      font-size: 15px;
-    }
-
-    .btn-close:hover {
-      border-color: rgba(71, 85, 105, 0.95);
       color: var(--text);
-    }
-
-    .modal-body {
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow: hidden;
-    }
-
-    .gpu-table-wrapper {
-      border-radius: 14px;
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      background: rgba(15, 23, 42, 0.96);
-      overflow: auto;
-      max-height: 55vh;
-    }
-
-    table.gpu-table {
-      width: 100%;
-      border-collapse: collapse;
       font-size: 11px;
-    }
-
-    .gpu-table thead {
-      background: rgba(15, 23, 42, 0.98);
-    }
-
-    .gpu-table th,
-    .gpu-table td {
-      padding: 6px 8px;
-      text-align: left;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
-      white-space: nowrap;
-    }
-
-    .gpu-table th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    .gpu-row-hot {
-      background: rgba(127, 29, 29, 0.2);
-    }
-
-    .gpu-status-pill {
-      font-size: 10px;
-      border-radius: 999px;
-      padding: 1px 6px;
-      border: 1px solid rgba(55, 65, 81, 0.95);
-      background: rgba(15, 23, 42, 0.96);
       display: inline-flex;
       align-items: center;
       gap: 4px;
-    }
-
-    .gpu-status-ok {
-      border-color: rgba(34, 197, 94, 0.85);
-      color: #bbf7d0;
-    }
-
-    .gpu-status-warn {
-      border-color: rgba(245, 158, 11, 0.9);
-      color: #fed7aa;
-    }
-
-    .gpu-status-crit {
-      border-color: rgba(239, 68, 68, 0.9);
-      color: #fecaca;
-    }
-
-    .modal-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 4px;
-      flex-wrap: wrap;
-    }
-
-    .iso-warning {
-      font-size: 11px;
-      color: #fecaca;
-      background: rgba(127, 29, 29, 0.4);
-      border-radius: 999px;
-      padding: 4px 8px;
-      border: 1px solid rgba(248, 113, 113, 0.9);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .iso-ok {
-      color: var(--text-muted);
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(55, 65, 81, 0.95);
-    }
-
-    .btn-find-gpu {
-      font-size: 11px;
-      border-radius: 999px;
-      padding: 4px 9px;
-      border: 1px solid rgba(56, 189, 248, 0.95);
-      background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 60%, #020617 100%);
-      color: #e0f2fe;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       cursor: pointer;
+      transition: all 0.16s ease-out;
     }
 
-    .btn-find-gpu:hover {
-      opacity: 0.92;
+    .btn-mini.primary {
+      border-color: rgba(56, 189, 248, 0.9);
+      background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 60%, #020617 100%);
+      font-weight: 500;
+      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.8);
+    }
+
+    .btn-mini:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .rig-graph {
+      margin-top: 6px;
+      border-radius: 12px;
+      height: 60px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.98));
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 6px 8px;
+    }
+
+    .rig-graph svg {
+      width: 100%;
+      height: 100%;
     }
 
     /* Responsive */
-    @media (max-width: 1150px) {
-      .app {
-        grid-template-columns: 60px minmax(0, 1.5fr) minmax(0, 1.1fr);
+    @media (max-width: 1100px) {
+      .summary-block {
+        grid-template-columns: minmax(0, 1fr);
       }
-      .summary-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .ai-grid {
+      .rig-row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
@@ -788,20 +588,23 @@
       .app {
         grid-template-columns: 60px minmax(0, 1fr);
       }
-      .right-column {
-        display: none;
+      .middle-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 640px) {
-      .summary-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .ai-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+    @media (max-width: 780px) {
       .app {
-        margin: 8px;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .sidebar {
+        display: none;
+      }
+      .rig-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .middle-row {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
   </style>
@@ -810,228 +613,237 @@
   <div class="app">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-logo">🐑</div>
-      <div class="sidebar-nav">
-        <div class="nav-icon active" title="Dashboard">📊</div>
-        <div class="nav-icon" title="Rigler">🐏</div>
-        <div class="nav-icon" title="AI Çoban">🤖</div>
-        <div class="nav-icon" title="Loglar">📜</div>
-        <div class="nav-icon" title="Ayarlar">⚙️</div>
+      <div class="logo-circle">🐑</div>
+      <div class="nav-stack">
+        <div class="nav-icon active">📊</div>
+        <div class="nav-icon">🐑</div>
+        <div class="nav-icon">🤖</div>
+        <div class="nav-icon">📜</div>
+        <div class="nav-icon">⚙️</div>
       </div>
-      <div class="sidebar-footer">
-        <span>GPU Çoban</span>
-        <span style="font-size:10px;">v0.1 · Luna UI</span>
+      <div class="sidebar-bottom">
+        GPU Çoban<br />
+        <span>AI Miner Paneli</span>
       </div>
     </aside>
 
-    <!-- Main left -->
+    <!-- Main -->
     <main class="main">
-      <!-- Topbar -->
-      <div class="topbar">
-        <div class="topbar-title">
-          <h1>📊 GPU Çoban Dashboard</h1>
-          <small>Sürü, rig ve AI Çoban durumuna tek bakış</small>
+      <!-- Top row -->
+      <div class="top-row">
+        <div class="top-row-title">
+          <h1>GPU Çoban Paneli</h1>
+          <small>Sistemdeki tüm rigler ve GPU Çoban durumu tek ekranda</small>
         </div>
-        <div class="topbar-actions">
-          <div class="chip-status">
+        <div class="top-row-right">
+          <span class="chip">
             <span>🟢</span>
             <span>AI Çoban Aktif</span>
-          </div>
-          <button class="btn-refresh" id="btn-refresh">
-            <span>🔄</span> Yenile
-          </button>
-          <button class="btn-ghost" id="last-update-label">
-            ⏱️ Son güncelleme: -
-          </button>
-          <button class="btn-avatar" title="Luna Panel">L</button>
+          </span>
+          <select class="select-compact">
+            <option>Canlı (son 30 dk)</option>
+            <option>Son 1 saat</option>
+            <option>Son 24 saat</option>
+          </select>
+          <div class="top-avatar">L</div>
         </div>
       </div>
 
-      <!-- Summary row -->
-      <section class="summary-grid">
-        <article class="card">
-          <div class="card-header">
-            <span>RIG / GPU</span>
-            <span class="card-icon">🐑</span>
-          </div>
-          <div class="card-main">
-            <div class="card-value" id="summary-rigs">-</div>
-            <div class="card-sub" id="summary-gpus">Toplam GPU: - (İzole: -)</div>
-            <div class="card-tag">
-              <span>⚙️ Sistem: <span id="summary-system-status">Veri bekleniyor…</span></span>
+      <!-- Top single summary block -->
+      <section class="summary-block">
+        <div class="summary-left">
+          <div class="summary-title-row">
+            <div>
+              <div class="summary-title-main">Genel Durum Özeti</div>
+              <div class="summary-sub">
+                Toplam hashrate, güç tüketimi, sıcaklık ve sürü sağlığı
+              </div>
             </div>
           </div>
-        </article>
-
-        <article class="card">
-          <div class="card-header">
-            <span>Toplam Hashrate</span>
-            <span class="card-icon">⛏️</span>
-          </div>
-          <div class="card-main">
-            <div class="card-value" id="summary-hash">-</div>
-            <div class="card-sub" id="summary-hash-sub">Son 1 dk</div>
-            <div class="card-tag">
-              <span>📈 En yüksek rig: <span id="summary-best-rig">-</span></span>
+          <div class="summary-metrics">
+            <div class="summary-pill">
+              <div>
+                <div class="summary-pill-main">Toplam Hashrate</div>
+                <div class="summary-pill-delta">Son 5 dk ortalaması</div>
+              </div>
+              <div class="summary-pill-value" id="summary-hash">–</div>
+            </div>
+            <div class="summary-pill">
+              <div>
+                <div class="summary-pill-main">Toplam Güç</div>
+                <div class="summary-pill-delta">Tahmini tüketim</div>
+              </div>
+              <div class="summary-pill-value alt" id="summary-power">–</div>
+            </div>
+            <div class="summary-pill">
+              <div>
+                <div class="summary-pill-main">Ortalama Sıcaklık</div>
+                <div class="summary-pill-delta">GPU ortalaması</div>
+              </div>
+              <div class="summary-pill-value warn" id="summary-temp">–</div>
+            </div>
+            <div class="summary-pill">
+              <div>
+                <div class="summary-pill-main">İzole GPU / Toplam</div>
+                <div class="summary-pill-delta">Çoban izolasyon durumu</div>
+              </div>
+              <div class="summary-pill-value" id="summary-iso">0 / 0</div>
             </div>
           </div>
-        </article>
-
-        <article class="card">
-          <div class="card-header">
-            <span>Toplam Güç</span>
-            <span class="card-icon">⚡</span>
+        </div>
+        <div class="summary-right">
+          <div class="summary-right-title">
+            <span>Son 30 dk hashrate çizgisi</span>
+            <span style="font-size:11px; color:var(--muted);">Demo görünüm</span>
           </div>
-          <div class="card-main">
-            <div class="card-value" id="summary-power">-</div>
-            <div class="card-sub" id="summary-power-sub">Tahmini tüketim</div>
-            <div class="card-tag">
-              <span>⚙️ Verim: <span id="summary-efficiency">-</span></span>
-            </div>
+          <div class="summary-right-big">
+            <span id="summary-main-hash">–</span>
+            <span class="unit">MH/s</span>
           </div>
-        </article>
-
-        <article class="card">
-          <div class="card-header">
-            <span>Sıcaklık & Sağlık</span>
-            <span class="card-icon">🔥</span>
+          <div class="sparkline">
+            <!-- Basit çizgi – gerçek veri için JS değiştirir -->
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
+              <polyline
+                points="0,25 10,20 20,22 30,16 40,18 50,14 60,19 70,17 80,21 90,18 100,20"
+                fill="none"
+                stroke="#38bdf8"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </div>
-          <div class="card-main">
-            <div class="card-value" id="summary-temp">-</div>
-            <div class="card-sub" id="summary-temp-sub">GPU ortalama sıcaklık</div>
-            <div class="card-tag">
-              <span>🩺 Stabilite: <span id="summary-stability">-</span></span>
-            </div>
-          </div>
-        </article>
+        </div>
       </section>
 
-      <!-- AI cards -->
-      <section class="ai-grid">
-        <article class="ai-card">
-          <div class="ai-card-inner">
-            <div class="ai-title">
-              <span>🤖 AI Çoban</span>
-              <span class="ai-pill" id="ai-coban-status">Sakin mod</span>
+      <!-- Middle 3 equal cards -->
+      <section class="middle-row">
+        <!-- Card 1: AI Çoban -->
+        <div class="mid-card">
+          <div class="mid-card-header">
+            <div class="mid-card-title">
+              <span class="icon">🤖</span>
+              AI Çoban
             </div>
-            <div class="ai-main-value" id="ai-coban-main">-</div>
-            <div class="ai-sub" id="ai-coban-sub">Son aksiyon: -</div>
-            <div class="ai-meta-row">
-              <span>📅 Log sayısı: <span id="ai-coban-log-count">-</span></span>
-              <span>⚠️ Uyarı: <span id="ai-coban-warn">-</span></span>
-            </div>
+            <span class="mid-card-tag">Son 1 saat</span>
           </div>
-        </article>
+          <div class="mid-card-main" id="mid-ai-actions">– aksiyon</div>
+          <div class="mid-card-sub">
+            GPU Çoban’ın hash, güç ve sıcaklık için yaptığı ayarlamalar.
+          </div>
+          <div class="mid-card-graph">
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
+              <polyline
+                points="0,30 12,26 24,28 36,18 48,22 60,16 72,20 84,17 100,22"
+                fill="none"
+                stroke="#a855f7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
 
-        <article class="ai-card">
-          <div class="ai-card-inner">
-            <div class="ai-title">
-              <span>🛡️ Bekçi (Guardian)</span>
-              <span class="ai-pill" id="ai-guardian-status">Pasif uyarı yok</span>
+        <!-- Card 2: Bekçi / Guardian -->
+        <div class="mid-card">
+          <div class="mid-card-header">
+            <div class="mid-card-title">
+              <span class="icon">🛡️</span>
+              Bekçi (Guardian)
             </div>
-            <div class="ai-main-value" id="ai-guardian-main">-</div>
-            <div class="ai-sub" id="ai-guardian-sub">Son hareket: -</div>
-            <div class="ai-meta-row">
-              <span>🔁 Reset denemeleri: <span id="ai-guardian-resets">-</span></span>
-              <span>🔥 Risk GPU: <span id="ai-guardian-risk">-</span></span>
-            </div>
+            <span class="mid-card-tag">Watchdog</span>
           </div>
-        </article>
+          <div class="mid-card-main" id="mid-guardian-status">0 kritik · 0 uyarı</div>
+          <div class="mid-card-sub">
+            Servis ve miner izleme, otomatik restart ve izolasyon kararları.
+          </div>
+          <div class="mid-card-graph">
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
+              <polyline
+                points="0,20 15,20 30,19 45,21 60,20 75,20 90,19 100,20"
+                fill="none"
+                stroke="#22c55e"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
 
-        <article class="ai-card">
-          <div class="ai-card-inner">
-            <div class="ai-title">
-              <span>💬 AI Mesaj Kutusu</span>
-              <span class="ai-pill" id="ai-messages-status">Panel logları</span>
+        <!-- Card 3: Şimdilik boş -->
+        <div class="mid-card empty">
+          <div class="mid-card-header">
+            <div class="mid-card-title">
+              <span class="icon">📦</span>
+              Boş Alan
             </div>
-            <div class="ai-main-value" id="ai-messages-main">-</div>
-            <div class="ai-sub" id="ai-messages-sub">Son mesaj: -</div>
-            <div class="ai-meta-row">
-              <span class="ai-pill ai-pill-warn">⚠️ Warn: <span id="ai-messages-warn">-</span></span>
-              <span class="ai-pill ai-pill-crit">🟥 Crit: <span id="ai-messages-crit">-</span></span>
-            </div>
+            <span class="mid-card-tag">Rezerve</span>
           </div>
-        </article>
+          <div class="mid-card-empty-text">
+            Bu alanı sonra seninle birlikte başka bir modül için kullanacağız
+            (örneğin kârlılık, uyarı istatistikleri veya Luna bot konuşmaları).
+          </div>
+        </div>
       </section>
 
-      <!-- Rigs panel -->
-      <section class="rigs-panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">
-              <span>🐏 Rigler</span>
+      <!-- Rig cards row -->
+      <section class="rig-row" id="rig-cards">
+        <!-- Rig kartları panel.js ile dinamik doldurulacak.
+             Şimdilik bir demo kart bırakıyorum. -->
+        <article class="rig-card">
+          <div class="rig-header">
+            <div class="rig-header-left">
+              <div class="rig-name-row">
+                <span class="icon">🐑</span>
+                <span>Rig-01</span>
+                <span class="rig-status-chip rig-status-ok">
+                  <span>🟢</span> OK
+                </span>
+              </div>
+              <div class="rig-sub">Ev - Test PC · 1 GPU</div>
             </div>
-            <div class="panel-sub">Her rig’e tıklayarak GPU detaylarını görebilirsin.</div>
+            <div class="rig-header-right">
+              <div class="rig-hash">
+                34.5 <small>MH/s</small>
+              </div>
+              <div class="rig-meta">80.4 W · 66°C</div>
+              <div class="rig-meta">ERG · autolykos2 · gminer</div>
+            </div>
           </div>
-          <span class="link-small" id="rig-count-label">- rig</span>
-        </div>
-        <div class="rigs-list" id="rigs-list">
-          <!-- JS ile doldurulacak -->
-        </div>
+          <div class="rig-graph">
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
+              <polyline
+                points="0,24 12,22 24,21 36,18 48,19 60,17 72,18 84,19 100,18"
+                fill="none"
+                stroke="#38bdf8"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="rig-footer">
+            <div class="rig-footer-left">
+              <span>Son görüldü: şimdi</span>
+              <span>İzole GPU: yok</span>
+            </div>
+            <div class="rig-footer-right">
+              <button class="btn-mini primary">
+                <span>🔍</span> Detay
+              </button>
+              <button class="btn-mini">
+                <span>🐏</span> Find GPU
+              </button>
+            </div>
+          </div>
+        </article>
       </section>
     </main>
-
-    <!-- Right column: logs -->
-    <aside class="right-column">
-      <section class="log-panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">
-              <span>📜 AI Çoban Mesajları</span>
-            </div>
-            <div class="panel-sub">Çoban & Bekçi’den son uyarılar ve açıklamalar.</div>
-          </div>
-          <span class="link-small" id="log-count-label">- kayıt</span>
-        </div>
-        <div class="log-list" id="log-list">
-          <!-- JS ile doldurulacak -->
-        </div>
-      </section>
-    </aside>
   </div>
 
-  <!-- Modal -->
-  <div class="modal-backdrop" id="rig-modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">
-          <h2 id="modal-rig-title">Rig Detayı</h2>
-          <small id="modal-rig-sub">-</small>
-        </div>
-        <button class="btn-close" id="modal-close-btn">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="gpu-table-wrapper">
-          <table class="gpu-table">
-            <thead>
-              <tr>
-                <th>GPU</th>
-                <th>Model</th>
-                <th>Hash</th>
-                <th>Güç</th>
-                <th>Sıcaklık</th>
-                <th>Fan</th>
-                <th>PL</th>
-                <th>Durum</th>
-              </tr>
-            </thead>
-            <tbody id="gpu-table-body">
-              <!-- JS ile doldurulacak -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div id="modal-iso-message" class="iso-warning iso-ok">
-          ☑️ Bu rig’de izolasyona alınmış GPU yok.
-        </div>
-        <button class="btn-find-gpu" id="btn-find-gpu">
-          🔍 Find GPU (fan taktiği)
-        </button>
-      </div>
-    </div>
-  </div>
-
+  <!-- panel.js buraya bağlanacak -->
   <script src="panel.js"></script>
 </body>
 </html>
