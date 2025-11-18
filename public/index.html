@@ -1,849 +1,386 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8" />
-  <title>GPU Çoban Paneli</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #050816;
-      --bg-alt: #070b22;
-      --card: #0b1024;
-      --card-soft: #111632;
-      --accent: #38bdf8;
-      --accent-2: #a855f7;
-      --accent-3: #f97316;
-      --ok: #22c55e;
-      --warn: #facc15;
-      --crit: #f97373;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --border: #1f2937;
-      --radius-lg: 18px;
-      --radius-md: 14px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 55%);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    .app {
-      display: grid;
-      grid-template-columns: 78px minmax(0, 1fr);
-      max-width: 1440px;
-      margin: 16px auto;
-      border-radius: 24px;
-      overflow: hidden;
-      background: linear-gradient(135deg, #020617 0, #020617 40%, #020315 100%);
-      border: 1px solid rgba(148, 163, 184, 0.16);
-      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.85);
-    }
-
-    /* Sidebar */
-    .sidebar {
-      background: radial-gradient(circle at top left, #111827 0, #020617 60%);
-      border-right: 1px solid rgba(31, 41, 55, 0.95);
-      padding: 16px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo-circle {
-      width: 46px;
-      height: 46px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #5ee7ff 0, #2563eb 40%, #020617 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.7);
-    }
-
-    .nav-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .nav-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(30, 64, 175, 0.5);
-      cursor: pointer;
-      transition: all 0.18s ease-out;
-    }
-
-    .nav-icon.active {
-      color: var(--text);
-      background: radial-gradient(circle at 30% 20%, #22d3ee 0, #6366f1 45%, #020617 100%);
-      border-color: rgba(94, 234, 212, 0.6);
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
-      transform: translateY(-1px);
-    }
-
-    .nav-icon:hover:not(.active) {
-      border-color: rgba(148, 163, 184, 0.8);
-      transform: translateY(-1px);
-    }
-
-    .sidebar-bottom {
-      margin-top: auto;
-      font-size: 10px;
-      color: var(--muted);
-      text-align: center;
-      opacity: 0.8;
-    }
-
-    /* Main layout */
-    .main {
-      padding: 18px 20px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .top-row-title {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .top-row-title h1 {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .top-row-title small {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .top-row-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .chip {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(52, 211, 153, 0.7);
-      background: rgba(22, 163, 74, 0.16);
-      color: #bbf7d0;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .select-compact {
-      font-size: 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text);
-      padding: 5px 9px;
-      outline: none;
-    }
-
-    .top-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: radial-gradient(circle at 20% 0, #f472b6 0, #6366f1 45%, #020617 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      cursor: default;
-    }
-
-    /* Top summary block (tek büyük blok) */
-    .summary-block {
-      margin-top: 4px;
-      background: radial-gradient(circle at top left, #111827 0, #020617 70%);
-      border-radius: 20px;
-      padding: 16px 18px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      box-shadow: var(--shadow-soft);
-      display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
-      gap: 18px;
-      align-items: center;
-    }
-
-    .summary-left {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .summary-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .summary-title-main {
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
-
-    .summary-sub {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .summary-metrics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .summary-pill {
-      min-width: 150px;
-      padding: 7px 9px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .summary-pill-main {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .summary-pill-value {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    .summary-pill-value.alt {
-      color: var(--accent-2);
-    }
-
-    .summary-pill-value.warn {
-      color: var(--accent-3);
-    }
-
-    .summary-pill-delta {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .summary-right {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .summary-right-title {
-      font-size: 13px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .summary-right-big {
-      font-size: 24px;
-      font-weight: 600;
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-
-    .summary-right-big span.unit {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    /* Sparkline container */
-    .sparkline {
-      margin-top: 8px;
-      width: 100%;
-      height: 70px;
-      border-radius: 14px;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(3, 7, 18, 0.95));
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 8px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sparkline svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Middle 3 cards row */
-    .middle-row {
-      margin-top: 4px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .mid-card {
-      border-radius: var(--radius-lg);
-      padding: 12px 13px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      background: radial-gradient(circle at top left, #0b1120 0, #020617 70%);
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .mid-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .mid-card-title {
-      font-size: 13px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .mid-card-title span.icon {
-      font-size: 18px;
-    }
-
-    .mid-card-tag {
-      font-size: 11px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      color: var(--muted);
-    }
-
-    .mid-card-main {
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .mid-card-sub {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .mid-card-graph {
-      margin-top: 6px;
-      height: 52px;
-      border-radius: 10px;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.96));
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 6px 8px;
-    }
-
-    .mid-card-graph svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .mid-card.empty {
-      opacity: 0.45;
-      border-style: dashed;
-      border-color: rgba(107, 114, 128, 0.7);
-      background: linear-gradient(
-        135deg,
-        rgba(15, 23, 42, 0.95),
-        rgba(3, 7, 18, 0.98)
-      );
-    }
-
-    .mid-card-empty-text {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* Rig cards row */
-    .rig-row {
-      margin-top: 8px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 4px;
-    }
-
-    .rig-card {
-      border-radius: 18px;
-      padding: 12px 13px;
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      background: radial-gradient(circle at top left, #111827 0, #020617 70%);
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      cursor: pointer;
-      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out,
-        border-color 0.18s ease-out;
-    }
-
-    .rig-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(56, 189, 248, 0.8);
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.9);
-    }
-
-    .rig-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .rig-header-left {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .rig-name-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    .rig-name-row span.icon {
-      font-size: 18px;
-    }
-
-    .rig-sub {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .rig-header-right {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .rig-hash {
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .rig-hash small {
-      font-size: 11px;
-      color: var(--muted);
-      margin-left: 4px;
-    }
-
-    .rig-meta {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .rig-status-chip {
-      align-self: flex-start;
-      font-size: 11px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .rig-status-ok {
-      background: rgba(22, 163, 74, 0.16);
-      border: 1px solid rgba(52, 211, 153, 0.7);
-      color: #bbf7d0;
-    }
-
-    .rig-status-warn {
-      background: rgba(245, 158, 11, 0.13);
-      border: 1px solid rgba(251, 191, 36, 0.8);
-      color: #fed7aa;
-    }
-
-    .rig-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      color: var(--muted);
-      gap: 10px;
-    }
-
-    .rig-footer-left {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .rig-footer-right {
-      display: flex;
-      gap: 6px;
-    }
-
-    .btn-mini {
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text);
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      transition: all 0.16s ease-out;
-    }
-
-    .btn-mini.primary {
-      border-color: rgba(56, 189, 248, 0.9);
-      background: radial-gradient(circle at top left, #0ea5e9 0, #1d4ed8 60%, #020617 100%);
-      font-weight: 500;
-      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.8);
-    }
-
-    .btn-mini:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-
-    .rig-graph {
-      margin-top: 6px;
-      border-radius: 12px;
-      height: 60px;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.98));
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 6px 8px;
-    }
-
-    .rig-graph svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Responsive */
-    @media (max-width: 1100px) {
-      .summary-block {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .rig-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 900px) {
-      .app {
-        grid-template-columns: 60px minmax(0, 1fr);
-      }
-      .middle-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 780px) {
-      .app {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .sidebar {
-        display: none;
-      }
-      .rig-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .middle-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="logo-circle">🐑</div>
-      <div class="nav-stack">
-        <div class="nav-icon active">📊</div>
-        <div class="nav-icon">🐑</div>
-        <div class="nav-icon">🤖</div>
-        <div class="nav-icon">📜</div>
-        <div class="nav-icon">⚙️</div>
-      </div>
-      <div class="sidebar-bottom">
-        GPU Çoban<br />
-        <span>AI Miner Paneli</span>
-      </div>
-    </aside>
-
-    <!-- Main -->
-    <main class="main">
-      <!-- Top row -->
-      <div class="top-row">
-        <div class="top-row-title">
-          <h1>GPU Çoban Paneli</h1>
-          <small>Sistemdeki tüm rigler ve GPU Çoban durumu tek ekranda</small>
+// GPU Çoban Panel JS
+// Kaynaklar: /rigs.json ve /outbox.json
+
+async function fetchJson(path) {
+  try {
+    const res = await fetch(path + `?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (e) {
+    console.error("JSON fetch error", path, e);
+    return null;
+  }
+}
+
+// Basit helper – ISO tarihi "x dk önce" çevir
+function timeAgo(iso) {
+  if (!iso) return "bilinmiyor";
+  const then = new Date(iso);
+  if (isNaN(then.getTime())) return iso;
+  const now = new Date();
+  const diffSec = Math.floor((now - then) / 1000);
+  if (diffSec < 60) return `${diffSec}s önce`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin} dk önce`;
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return `${diffH} sa önce`;
+  const diffD = Math.floor(diffH / 24);
+  return `${diffD} gün önce`;
+}
+
+// Sayı formatı
+function formatHash(v) {
+  if (v == null) return "0";
+  if (v >= 1000) return (v / 1000).toFixed(2) + " GH/s";
+  return v.toFixed(1) + " MH/s";
+}
+
+function formatPower(v) {
+  if (v == null) return "0 W";
+  if (v >= 1000) return (v / 1000).toFixed(2) + " kW";
+  return v.toFixed(2) + " W";
+}
+
+function formatTemp(v) {
+  if (v == null) return "–";
+  return v.toFixed(1) + "°C";
+}
+
+// DOM referansları
+const rigGridEl = document.getElementById("rig-grid");
+
+const metricTotalRigsEl = document.getElementById("metric-total-rigs");
+const metricTotalGpusEl = document.getElementById("metric-total-gpus");
+const metricTotalHashEl = document.getElementById("metric-total-hash");
+const metricHashUnitEl = document.getElementById("metric-hash-unit");
+const metricTotalPowerEl = document.getElementById("metric-total-power");
+const metricAvgTempEl = document.getElementById("metric-avg-temp");
+const metricHealthNoteEl = document.getElementById("metric-health-note");
+
+// AI / Guardian kartları
+const aiModePillEl = document.getElementById("ai-mode-pill");
+const aiLastActionEl = document.getElementById("ai-last-action");
+const aiLastDetailEl = document.getElementById("ai-last-detail");
+const aiLastTsEl = document.getElementById("ai-last-ts");
+
+const guardPillEl = document.getElementById("guard-pill");
+const guardIsoCountEl = document.getElementById("guard-iso-count");
+const guardIsoDetailEl = document.getElementById("guard-iso-detail");
+const guardLastTsEl = document.getElementById("guard-last-ts");
+
+// Modal
+const modalBackdropEl = document.getElementById("rig-modal-backdrop");
+const modalTitleEl = document.getElementById("modal-title");
+const modalSubtitleEl = document.getElementById("modal-subtitle");
+const gpuListEl = document.getElementById("gpu-list");
+const isoSummaryEl = document.getElementById("iso-summary");
+const modalCloseBtn = document.getElementById("modal-close-btn");
+const findGpuBtn = document.getElementById("find-gpu-btn");
+
+let lastRigsData = null;
+
+// Modal helpers
+function openModal() {
+  modalBackdropEl.classList.add("show");
+}
+
+function closeModal() {
+  modalBackdropEl.classList.remove("show");
+}
+
+modalCloseBtn.addEventListener("click", closeModal);
+modalBackdropEl.addEventListener("click", (e) => {
+  if (e.target === modalBackdropEl) closeModal();
+});
+
+findGpuBtn.addEventListener("click", () => {
+  alert(
+    "Find GPU (fan taktiği) komutu henüz panel üzerinden aktif değil.\n\n" +
+      "Terminalde kullandığımız Luna bot komutlarına bağlandığında burada tetiklenecek. 🙂"
+  );
+});
+
+// RIG kartlarını çiz
+function renderRigs(rigs) {
+  rigGridEl.innerHTML = "";
+
+  if (!rigs || rigs.length === 0) {
+    rigGridEl.innerHTML =
+      '<div style="font-size:12px;color:#9ca3af;">Hiç rig telemetrisi bulunamadı.</div>';
+    return;
+  }
+
+  rigs.forEach((rig) => {
+    const gpuCount = rig.gpus ? rig.gpus.length : 0;
+    const totalHash = (rig.gpus || []).reduce(
+      (sum, g) => sum + (g.hash_mhs || 0),
+      0
+    );
+    const totalPower = (rig.gpus || []).reduce(
+      (sum, g) => sum + (g.power_w || 0),
+      0
+    );
+    const avgTemp =
+      gpuCount > 0
+        ? (rig.gpus || []).reduce((sum, g) => sum + (g.temp_c || 0), 0) /
+          gpuCount
+        : 0;
+
+    const anyWarn =
+      (rig.warnings && rig.warnings.length > 0) ||
+      (rig.gpus || []).some((g) => g.status && g.status !== "ok");
+
+    const card = document.createElement("article");
+    card.className = "rig-card";
+    card.innerHTML = `
+      <div class="rig-header">
+        <div class="rig-title">
+          <div class="rig-name">
+            <span class="icon">🐑</span>
+            <span>${rig.name || rig.rig_id || "Rig"}</span>
+          </div>
+          <div class="rig-sub">
+            ${gpuCount} GPU • Son görüldü: ${timeAgo(rig.last_seen)}
+          </div>
         </div>
-        <div class="top-row-right">
-          <span class="chip">
-            <span>🟢</span>
-            <span>AI Çoban Aktif</span>
-          </span>
-          <select class="select-compact">
-            <option>Canlı (son 30 dk)</option>
-            <option>Son 1 saat</option>
-            <option>Son 24 saat</option>
-          </select>
-          <div class="top-avatar">L</div>
+        <div class="rig-status-chip ${anyWarn ? "warn" : "ok"}">
+          <span>${anyWarn ? "Uyarı" : "OK"}</span>
         </div>
       </div>
-
-      <!-- Top single summary block -->
-      <section class="summary-block">
-        <div class="summary-left">
-          <div class="summary-title-row">
-            <div>
-              <div class="summary-title-main">Genel Durum Özeti</div>
-              <div class="summary-sub">
-                Toplam hashrate, güç tüketimi, sıcaklık ve sürü sağlığı
-              </div>
-            </div>
+      <div class="rig-body">
+        <div class="rig-metric-list">
+          <div>
+            <span class="rig-metric-label">Hashrate</span><br/>
+            <span class="rig-metric-value">${formatHash(totalHash)}</span>
           </div>
-          <div class="summary-metrics">
-            <div class="summary-pill">
-              <div>
-                <div class="summary-pill-main">Toplam Hashrate</div>
-                <div class="summary-pill-delta">Son 5 dk ortalaması</div>
-              </div>
-              <div class="summary-pill-value" id="summary-hash">–</div>
-            </div>
-            <div class="summary-pill">
-              <div>
-                <div class="summary-pill-main">Toplam Güç</div>
-                <div class="summary-pill-delta">Tahmini tüketim</div>
-              </div>
-              <div class="summary-pill-value alt" id="summary-power">–</div>
-            </div>
-            <div class="summary-pill">
-              <div>
-                <div class="summary-pill-main">Ortalama Sıcaklık</div>
-                <div class="summary-pill-delta">GPU ortalaması</div>
-              </div>
-              <div class="summary-pill-value warn" id="summary-temp">–</div>
-            </div>
-            <div class="summary-pill">
-              <div>
-                <div class="summary-pill-main">İzole GPU / Toplam</div>
-                <div class="summary-pill-delta">Çoban izolasyon durumu</div>
-              </div>
-              <div class="summary-pill-value" id="summary-iso">0 / 0</div>
-            </div>
+          <div>
+            <span class="rig-metric-label">Güç</span><br/>
+            <span class="rig-metric-value">${formatPower(totalPower)}</span>
+          </div>
+          <div>
+            <span class="rig-metric-label">Sıcaklık</span><br/>
+            <span class="rig-metric-value">${formatTemp(avgTemp)}</span>
           </div>
         </div>
-        <div class="summary-right">
-          <div class="summary-right-title">
-            <span>Son 30 dk hashrate çizgisi</span>
-            <span style="font-size:11px; color:var(--muted);">Demo görünüm</span>
-          </div>
-          <div class="summary-right-big">
-            <span id="summary-main-hash">–</span>
-            <span class="unit">MH/s</span>
-          </div>
-          <div class="sparkline">
-            <!-- Basit çizgi – gerçek veri için JS değiştirir -->
-            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-              <polyline
-                points="0,25 10,20 20,22 30,16 40,18 50,14 60,19 70,17 80,21 90,18 100,20"
-                fill="none"
-                stroke="#38bdf8"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
+        <div class="rig-sparkline">
+          <div class="rig-sparkline-line"></div>
         </div>
-      </section>
+      </div>
+      <div class="rig-footer">
+        <span>Miner: ${rig.miner?.name || "bilinmiyor"} ${
+      rig.miner?.coin ? "• " + rig.miner.coin : ""
+    }</span>
+        <span class="highlight">${
+          anyWarn ? "Detay için tıklayın" : "GPU'lar stabil görünüyor"
+        }</span>
+      </div>
+    `;
 
-      <!-- Middle 3 equal cards -->
-      <section class="middle-row">
-        <!-- Card 1: AI Çoban -->
-        <div class="mid-card">
-          <div class="mid-card-header">
-            <div class="mid-card-title">
-              <span class="icon">🤖</span>
-              AI Çoban
-            </div>
-            <span class="mid-card-tag">Son 1 saat</span>
-          </div>
-          <div class="mid-card-main" id="mid-ai-actions">– aksiyon</div>
-          <div class="mid-card-sub">
-            GPU Çoban’ın hash, güç ve sıcaklık için yaptığı ayarlamalar.
-          </div>
-          <div class="mid-card-graph">
-            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-              <polyline
-                points="0,30 12,26 24,28 36,18 48,22 60,16 72,20 84,17 100,22"
-                fill="none"
-                stroke="#a855f7"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
+    card.addEventListener("click", () => openRigModal(rig));
+    rigGridEl.appendChild(card);
+  });
+}
 
-        <!-- Card 2: Bekçi / Guardian -->
-        <div class="mid-card">
-          <div class="mid-card-header">
-            <div class="mid-card-title">
-              <span class="icon">🛡️</span>
-              Bekçi (Guardian)
-            </div>
-            <span class="mid-card-tag">Watchdog</span>
-          </div>
-          <div class="mid-card-main" id="mid-guardian-status">0 kritik · 0 uyarı</div>
-          <div class="mid-card-sub">
-            Servis ve miner izleme, otomatik restart ve izolasyon kararları.
-          </div>
-          <div class="mid-card-graph">
-            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-              <polyline
-                points="0,20 15,20 30,19 45,21 60,20 75,20 90,19 100,20"
-                fill="none"
-                stroke="#22c55e"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
+// Modal içeriği doldur
+function openRigModal(rig) {
+  modalTitleEl.innerHTML = `🐑 ${rig.name || rig.rig_id || "Rig"}`;
+  modalSubtitleEl.textContent = `${
+    (rig.gpus || []).length
+  } GPU • Son görüldü: ${timeAgo(rig.last_seen)}`;
 
-        <!-- Card 3: Şimdilik boş -->
-        <div class="mid-card empty">
-          <div class="mid-card-header">
-            <div class="mid-card-title">
-              <span class="icon">📦</span>
-              Boş Alan
-            </div>
-            <span class="mid-card-tag">Rezerve</span>
-          </div>
-          <div class="mid-card-empty-text">
-            Bu alanı sonra seninle birlikte başka bir modül için kullanacağız
-            (örneğin kârlılık, uyarı istatistikleri veya Luna bot konuşmaları).
-          </div>
-        </div>
-      </section>
+  gpuListEl.innerHTML = "";
 
-      <!-- Rig cards row -->
-      <section class="rig-row" id="rig-cards">
-        <!-- Rig kartları panel.js ile dinamik doldurulacak.
-             Şimdilik bir demo kart bırakıyorum. -->
-        <article class="rig-card">
-          <div class="rig-header">
-            <div class="rig-header-left">
-              <div class="rig-name-row">
-                <span class="icon">🐑</span>
-                <span>Rig-01</span>
-                <span class="rig-status-chip rig-status-ok">
-                  <span>🟢</span> OK
-                </span>
-              </div>
-              <div class="rig-sub">Ev - Test PC · 1 GPU</div>
-            </div>
-            <div class="rig-header-right">
-              <div class="rig-hash">
-                34.5 <small>MH/s</small>
-              </div>
-              <div class="rig-meta">80.4 W · 66°C</div>
-              <div class="rig-meta">ERG · autolykos2 · gminer</div>
-            </div>
-          </div>
-          <div class="rig-graph">
-            <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-              <polyline
-                points="0,24 12,22 24,21 36,18 48,19 60,17 72,18 84,19 100,18"
-                fill="none"
-                stroke="#38bdf8"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <div class="rig-footer">
-            <div class="rig-footer-left">
-              <span>Son görüldü: şimdi</span>
-              <span>İzole GPU: yok</span>
-            </div>
-            <div class="rig-footer-right">
-              <button class="btn-mini primary">
-                <span>🔍</span> Detay
-              </button>
-              <button class="btn-mini">
-                <span>🐏</span> Find GPU
-              </button>
-            </div>
-          </div>
-        </article>
-      </section>
-    </main>
-  </div>
+  const headerRow = document.createElement("div");
+  headerRow.className = "gpu-row header";
+  headerRow.innerHTML = `
+    <div>GPU</div>
+    <div>Model</div>
+    <div>Hashrate</div>
+    <div>Güç</div>
+    <div>Sıcaklık</div>
+    <div>Durum</div>
+  `;
+  gpuListEl.appendChild(headerRow);
 
-  <!-- panel.js buraya bağlanacak -->
-  <script src="panel.js"></script>
-</body>
-</html>
+  let isoCount = 0;
+  (rig.gpus || []).forEach((g) => {
+    const row = document.createElement("div");
+    row.className = "gpu-row";
+
+    const status = (g.status || "ok").toLowerCase();
+    let pillClass = "ok";
+    let label = "OK";
+    if (status === "isolated") {
+      pillClass = "iso";
+      label = "İZOLASYON";
+      isoCount++;
+    } else if (status !== "ok") {
+      pillClass = "warn";
+      label = status.toUpperCase();
+    }
+
+    row.innerHTML = `
+      <div>GPU${g.id != null ? g.id : ""}</div>
+      <div>${g.model || "-"}</div>
+      <div>${(g.hash_mhs || 0).toFixed(2)} MH/s</div>
+      <div>${formatPower(g.power_w || 0)}</div>
+      <div>${formatTemp(g.temp_c || 0)}</div>
+      <div><span class="gpu-status-pill ${pillClass}">${label}</span></div>
+    `;
+    gpuListEl.appendChild(row);
+  });
+
+  if (isoCount > 0) {
+    isoSummaryEl.innerHTML = `<span class="count">${isoCount}</span> GPU kalıcı izolasyonda. Fan taktiğiyle sahada doğrulama önerilir.`;
+  } else {
+    isoSummaryEl.textContent = "İzolasyonda GPU yok. Tüm kartlar aktif görünüyor.";
+  }
+
+  openModal();
+}
+
+// Genel metricleri hesapla
+function computeAndRenderSummary(rigs) {
+  if (!rigs || rigs.length === 0) {
+    metricTotalRigsEl.textContent = "0";
+    metricTotalGpusEl.textContent = "0 GPU";
+    metricTotalHashEl.textContent = "0.0";
+    metricHashUnitEl.textContent = "MH/s";
+    metricTotalPowerEl.textContent = "0.00";
+    metricAvgTempEl.textContent = "–";
+    metricHealthNoteEl.textContent = "Telemetri yok.";
+    return;
+  }
+
+  let totalRigs = rigs.length;
+  let totalGpus = 0;
+  let sumHash = 0;
+  let sumPower = 0;
+  let sumTemp = 0;
+  let tempCount = 0;
+  let anyWarn = false;
+
+  rigs.forEach((rig) => {
+    const gpus = rig.gpus || [];
+    totalGpus += gpus.length;
+    gpus.forEach((g) => {
+      sumHash += g.hash_mhs || 0;
+      sumPower += g.power_w || 0;
+      if (g.temp_c != null) {
+        sumTemp += g.temp_c;
+        tempCount++;
+      }
+      if (g.status && g.status !== "ok") anyWarn = true;
+    });
+    if (rig.warnings && rig.warnings.length > 0) anyWarn = true;
+  });
+
+  const avgTemp = tempCount ? sumTemp / tempCount : 0;
+
+  metricTotalRigsEl.textContent = totalRigs.toString();
+  metricTotalGpusEl.textContent = `${totalGpus} GPU`;
+
+  // Hash gösterimi – toplama göre MH/s veya GH/s
+  if (sumHash >= 1000) {
+    metricTotalHashEl.textContent = (sumHash / 1000).toFixed(2);
+    metricHashUnitEl.textContent = "GH/s";
+  } else {
+    metricTotalHashEl.textContent = sumHash.toFixed(1);
+    metricHashUnitEl.textContent = "MH/s";
+  }
+
+  metricTotalPowerEl.textContent = sumPower.toFixed(2);
+  metricAvgTempEl.textContent = avgTemp ? avgTemp.toFixed(1) : "–";
+
+  metricHealthNoteEl.textContent = anyWarn
+    ? "Bazı GPU’larda uyarı mevcut, detay için rig kartlarına bak."
+    : "GPU’ların büyük çoğunluğu sağlıklı görünüyor.";
+}
+
+// outbox.json’dan AI & Guardian özetleri
+function renderOutbox(outbox) {
+  if (!outbox || !Array.isArray(outbox.messages) || outbox.messages.length === 0) {
+    aiLastActionEl.textContent = "Henüz AI mesajı yok.";
+    aiLastDetailEl.textContent =
+      "Shepherd ve Guardian loglarından özetler burada görünecek.";
+    aiLastTsEl.textContent = "–";
+    guardIsoDetailEl.textContent = "Guardian logu alınamadı.";
+    guardLastTsEl.textContent = "–";
+    guardIsoCountEl.textContent = "0 GPU";
+    return;
+  }
+
+  // Varsayım: messages[0] en yeni
+  const last = outbox.messages[0];
+  aiLastActionEl.textContent = last.text || "Son aksiyon bilgisi yok.";
+  aiLastDetailEl.textContent = last.source
+    ? `Kaynak: ${last.source} • Seviye: ${last.level || "INFO"}`
+    : "Shepherd / Guardian karması.";
+
+  aiLastTsEl.textContent = last.ts ? timeAgo(last.ts) : "–";
+
+  // Guardian + izolasyon sayısı (rig verisinden de bakacağız)
+  let isoFromOutbox = 0;
+  if (typeof outbox.isolated_gpu_count === "number") {
+    isoFromOutbox = outbox.isolated_gpu_count;
+  }
+
+  // lastRigsData varsa oradan da kontrol et
+  let isoFromRigs = 0;
+  if (lastRigsData) {
+    lastRigsData.forEach((rig) => {
+      (rig.gpus || []).forEach((g) => {
+        if ((g.status || "").toLowerCase() === "isolated") isoFromRigs++;
+      });
+    });
+  }
+
+  const isoTotal = Math.max(isoFromOutbox, isoFromRigs);
+
+  guardIsoCountEl.textContent = `${isoTotal} GPU`;
+  if (isoTotal > 0) {
+    guardIsoDetailEl.textContent =
+      "Kalıcı izolasyonda GPU var. Sahada kontrol önerilir.";
+    guardPillEl.textContent = "Dikkat";
+  } else {
+    guardIsoDetailEl.textContent = "Kalıcı izolasyonda GPU görünmüyor.";
+    guardPillEl.textContent = "Temiz";
+  }
+
+  // Guardian’a ait son logu bulmaya çalışalım
+  const guardLog = outbox.messages.find(
+    (m) => m.source && m.source.toLowerCase().includes("guardian")
+  );
+  if (guardLog) {
+    guardLastTsEl.textContent = timeAgo(guardLog.ts);
+  } else {
+    guardLastTsEl.textContent = "–";
+  }
+
+  // Shepherd modu tahmini
+  if (last.mode) {
+    aiModePillEl.textContent = last.mode;
+  } else {
+    aiModePillEl.textContent = "Sakin Mod";
+  }
+}
+
+// Ana loop
+async function refresh() {
+  const rigsData = await fetchJson("rigs.json");
+  const outboxData = await fetchJson("outbox.json");
+
+  const rigs = rigsData && rigsData.rigs ? rigsData.rigs : [];
+  lastRigsData = rigs;
+
+  renderRigs(rigs);
+  computeAndRenderSummary(rigs);
+  renderOutbox(outboxData);
+}
+
+// İlk yükleme
+document.addEventListener("DOMContentLoaded", () => {
+  refresh();
+  // 20 sn’de bir yenileyelim
+  setInterval(refresh, 20000);
+});
