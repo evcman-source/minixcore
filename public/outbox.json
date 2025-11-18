@@ -1,6 +1,18 @@
 {
-  "generated_at": "2025-11-18T14:00:26Z",
+  "generated_at": "2025-11-18T14:00:47Z",
   "messages": [
+    {
+      "source": "coban",
+      "ts": "2025-11-18T14:00:41",
+      "level": "INFO",
+      "text": "GPU0: 65.0°C, 80.36W, 34.49/35.00 MH/s (%98.5) → PL=97W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
+    },
+    {
+      "source": "coban",
+      "ts": "2025-11-18T14:00:26",
+      "level": "INFO",
+      "text": "GPU0: 65.0°C, 80.36W, 34.49/35.00 MH/s (%98.5) → PL=97W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
+    },
     {
       "source": "coban",
       "ts": "2025-11-18T14:00:12",
@@ -348,18 +360,6 @@
       "ts": "2025-11-18T13:46:18",
       "level": "INFO",
       "text": "GPU0: 66.0°C, 80.36W, 34.96/35.00 MH/s (%99.9) → PL=97W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
-    },
-    {
-      "source": "coban",
-      "ts": "2025-11-18T13:46:04",
-      "level": "INFO",
-      "text": "GPU0: 66.0°C, 80.53W, 34.98/35.00 MH/s (%99.9) → PL=97W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
-    },
-    {
-      "source": "coban",
-      "ts": "2025-11-18T13:45:49",
-      "level": "INFO",
-      "text": "GPU0: 66.0°C, 94.62W, 34.98/35.00 MH/s (%99.9) → PL=97W, CORE=150, MEM=1200 MODE=LOCK (İzolasyon sayaç: 0)"
     }
   ]
 }
